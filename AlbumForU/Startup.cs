@@ -37,7 +37,7 @@ namespace AlbumForU
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
             })
-                .AddEntityFrameworkStores<AppDataContext>();
+                .AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDataContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
