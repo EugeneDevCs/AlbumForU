@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServerLayer.DataObtaining;
 
 namespace ServerLayer.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20210528112445_userId-to-Picture")]
+    partial class userIdtoPicture
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -268,9 +270,6 @@ namespace ServerLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(100)");
 
@@ -286,32 +285,6 @@ namespace ServerLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Pictures");
-                });
-
-            modelBuilder.Entity("ServerLayer.Models.Thumbnail", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OriginalId")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Path")
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("TopicId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Thumbs");
                 });
 
             modelBuilder.Entity("ServerLayer.Models.Topic", b =>

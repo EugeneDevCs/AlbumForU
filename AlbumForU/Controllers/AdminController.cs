@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AlbumForU.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin, manager")]
     public class AdminController : Controller
     {
         private readonly AppDataContext appDataContext;
@@ -24,6 +24,8 @@ namespace AlbumForU.Controllers
         {
             return View();
         }
+
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult AppointSmn()
         {
@@ -32,6 +34,7 @@ namespace AlbumForU.Controllers
             return View(appUsers);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult AppointCertainUser(string id)
         {
@@ -45,6 +48,7 @@ namespace AlbumForU.Controllers
             return View(userRole);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult AppointCertainUser(UserRoleRelation userRole)
         {
@@ -52,8 +56,44 @@ namespace AlbumForU.Controllers
             {
                 appDataContext.UserRoles.Add(new IdentityUserRole<string> { UserId = userRole.user.Id, RoleId = userRole.chosenRoleId });
                 appDataContext.SaveChanges();
+                TempData["Success"] = $"User {userRole.user.Nickname} was appointes to role with id {userRole.chosenRoleId}";
+                return RedirectToAction("AdminIndex");
             }
+
             return View(userRole);
+        }
+
+        [HttpGet]
+        public IActionResult AddNewTopic()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddNewTopic(string topicName)
+        {
+            if(ModelState.IsValid)
+            {
+                List<string> names = (from topic in appDataContext.Topics
+                                      select topic.Name).ToList();
+                if(names.Count()>0)
+                {
+                    foreach (var name in names)
+                    {
+                        if (name == topicName)
+                        {
+                            ModelState.AddModelError("", "This topic is alredy exist!");
+                            return View();
+                        }
+                    }
+                }
+                appDataContext.Topics.Add(new Topic() { Name = topicName });
+                appDataContext.SaveChanges();
+                TempData["Success"] = $"Topic {topicName} was successfully added!";
+                return RedirectToAction("AdminIndex");
+            }
+            ModelState.AddModelError("", "Fill in all fields!");
+            return View();
         }
     }
 }

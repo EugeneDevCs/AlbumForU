@@ -1,4 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
 <h1>Hello there!</h1>

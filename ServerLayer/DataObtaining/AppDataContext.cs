@@ -22,5 +22,6 @@ namespace ServerLayer.DataObtaining
                 .HasKey(o => new { o.UserId, o.PictureId });
         }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Thumbnail>Thumbs { get; set; }
     }
 }

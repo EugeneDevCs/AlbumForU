@@ -5,6 +5,9 @@
 @inject UserManager<AppUser> UserManager
 
 <ul class="navbar-nav">
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-controller="Picture" asp-action="AddAPicture">Add a photo</a>
+    </li>
     @if (SignInManager.IsSignedIn(User))
     {
         @if (User.IsInRole("admin") || User.IsInRole("manager"))
