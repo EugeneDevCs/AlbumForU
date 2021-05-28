@@ -1,0 +1,16 @@
+﻿@{
+    Layout = "~/Views/Admin/_Admin_Layout.cshtml";
+}
+@using ServerLayer.Models
+@model List<AppUser>
+<a class="btn" asp-action="AdminIndex">Back</a>
+<div class="users_list">
+    <ul>
+        @foreach (var user in Model)
+        {
+            <li>
+                <a class="list-group-item" href="/Admin/AppointCertainUser?id=@user.Id">@user.Firstname @user.Lastname</a>
+            </li>
+        }
+    </ul>
+</div>
