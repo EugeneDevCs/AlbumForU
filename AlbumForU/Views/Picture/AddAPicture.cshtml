@@ -3,16 +3,19 @@
 }
 @using AlbumForU.ViewModels
 @model PictureCreationViewModel
-<div class="card">
+<div class="alert-danger">
+    @Html.ValidationSummary()
+</div>
+<div class="card">    
     <form method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label>Picture Name</label>
-            <input class="form-control" asp-for="PictureName" />
+            <input required class="form-control" asp-for="PictureName" />
         </div>
         <div class="form-group">
             <label>Select topic</label>
-            <select class="form-control" asp-for="TopicId">
-                @foreach(var topic in Model.Topics)
+            <select required class="form-control" asp-for="TopicId">
+                @foreach (var topic in Model.Topics)
                 {
                     <option value="@topic.Id">@topic.Name</option>
                 }
@@ -20,7 +23,7 @@
         </div>
         <div class="form-group">
             <label>Upload a picture</label>
-            <input asp-for="Picture" type="file" class="form-control-file"/>
+            <input required asp-for="Picture" type="file" class="form-control-file" />
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-success">Add the picture</button>

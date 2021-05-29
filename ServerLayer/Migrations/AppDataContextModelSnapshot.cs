@@ -234,12 +234,22 @@ namespace ServerLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("PictureId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("TextBody")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserNick")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("dateTime")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
