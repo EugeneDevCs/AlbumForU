@@ -1,0 +1,55 @@
+﻿using Microsoft.EntityFrameworkCore;
+using ServerLayer.DataObtaining;
+using ServerLayer.Interfaces;
+using ServerLayer.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ServerLayer.Repositories
+{
+    public class ThumbnailRepository:IRepository<Thumbnail>
+    {
+        private readonly AppDataContext _appData;
+        //I will send a database object to this constructor
+        public ThumbnailRepository(AppDataContext data)
+        {
+            _appData = data;
+        }
+
+        public void Create(Thumbnail item)
+        {
+            _appData.Thumbs.Add(item); ;
+        }
+
+        public void Delete(string id)
+        {
+            Thumbnail thum = _appData.Thumbs.Find(id);
+            if (thum != null)
+            {
+                _appData.Thumbs.Remove(thum);
+            }
+        }
+
+        public IEnumerable<Thumbnail> Find(Func<Thumbnail, bool> predicate)
+        {
+            return _appData.Thumbs.Where(predicate);
+        }
+
+        public Thumbnail Get(string id)
+        {
+            return _appData.Thumbs.Find(id);
+        }
+
+        public IEnumerable<Thumbnail> GetAll()
+        {
+            return _appData.Thumbs;
+        }
+
+        public void Update(Thumbnail item)
+        {
+            _appData.Entry(item).State = EntityState.Modified;
+        }
+    }
+}

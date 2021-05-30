@@ -66,7 +66,9 @@ namespace AlbumForU.Controllers
         [HttpGet]
         public IActionResult AddNewTopic()
         {
-            return View();
+            List<Topic> Topics = (from tp in appDataContext.Topics
+                                  select tp).ToList();
+            return View(Topics);
         }
 
         [HttpPost]
@@ -90,7 +92,7 @@ namespace AlbumForU.Controllers
                 appDataContext.Topics.Add(new Topic() { Name = topicName });
                 appDataContext.SaveChanges();
                 TempData["Success"] = $"Topic {topicName} was successfully added!";
-                return RedirectToAction("AdminIndex");
+                return RedirectToAction("AddNewTopic");
             }
             ModelState.AddModelError("", "Fill in all fields!");
             return View();
