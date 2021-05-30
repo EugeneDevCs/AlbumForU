@@ -37,6 +37,15 @@ namespace ServerLayer.Repositories
             return _appData.Thumbs.Where(predicate);
         }
 
+        public IEnumerable<Thumbnail> FindSearch(string searchString)
+        {
+            List<Thumbnail> thumbnails = (from thum in _appData.Thumbs
+                                          join orig in _appData.Pictures on thum.OriginalId equals orig.Id
+                                          where orig.Name.Contains(searchString) == true
+                                          select thum).ToList();
+            return thumbnails;
+        }
+
         public Thumbnail Get(string id)
         {
             return _appData.Thumbs.Find(id);

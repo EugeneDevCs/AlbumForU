@@ -26,21 +26,67 @@ namespace ServerLayer.Repositories
             _appData = data;
         }
 
-        public IRepository<AppUser> Users => throw new NotImplementedException();
+        public IRepository<AppUser> Users
+        {
+            get
+            {
+                if (appUserRepository == null)
+                    appUserRepository = new AppUserRepository(_appData);
+                return appUserRepository;
+            }
+        }
 
-        public IRepository<Comment> Comments => throw new NotImplementedException();
+        public IRepository<Comment> Comments
+        {
+            get
+            {
+                if (commentRepository == null)
+                    commentRepository = new CommentRepository(_appData);
+                return commentRepository;
+            }
+        }
+        public IRepository<Picture> Pictures
+        {
+            get
+            {
+                if (pictureRepository == null)
+                    pictureRepository = new PictureRepository(_appData);
+                return pictureRepository;
+            }
+        }
+        public IRepository<Thumbnail> Thumbnails
+        {
+            get
+            {
+                if (thumbnailRepository == null)
+                    thumbnailRepository = new ThumbnailRepository(_appData);
+                return thumbnailRepository;
+            }
+        }
 
-        public IRepository<Picture> Pictures => throw new NotImplementedException();
+        public IRepository<Topic> Topics
+        {
+            get
+            {
+                if (topicRepository == null)
+                    topicRepository = new TopicRepository(_appData);
+                return topicRepository;
+            }
+        }
 
-        public IRepository<Thumbnail> Thumbnails => throw new NotImplementedException();
-
-        public IRepository<Topic> Topics => throw new NotImplementedException();
-
-        public IRepository<Like> Likes => throw new NotImplementedException();
+        public IRepository<Like> Likes
+        {
+            get
+            {
+                if (likeRepository == null)
+                    likeRepository = new LikeRepository(_appData);
+                return likeRepository;
+            }
+        }
 
         public void Save()
         {
-            throw new NotImplementedException();
+            _appData.SaveChanges();
         }
     }
 }
