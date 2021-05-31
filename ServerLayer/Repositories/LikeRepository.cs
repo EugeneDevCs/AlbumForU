@@ -18,9 +18,9 @@ namespace ServerLayer.Repositories
             _appData = data;
         }
 
-        public void Create(Like item)
+        public Like Create(Like item)
         {
-            _appData.Likes.Add(item); ;
+           return _appData.Likes.Add(item).Entity;
         }
 
         public void Delete(string id)

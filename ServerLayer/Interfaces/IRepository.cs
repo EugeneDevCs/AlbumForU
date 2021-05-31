@@ -7,7 +7,7 @@ namespace ServerLayer.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-        void Create(T item);
+        T Create(T item);
         IEnumerable<T> GetAll();
         T Get(string id);
         IEnumerable<T> Find(Func<T, Boolean> predicate);        

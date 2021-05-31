@@ -18,9 +18,9 @@ namespace ServerLayer.Repositories
             _appData = data;
         }
 
-        public void Create(Picture picture)
+        public Picture Create(Picture picture)
         {
-            _appData.Pictures.Add(picture);
+            return _appData.Pictures.Add(picture).Entity;
         }
 
         public void Delete(string id)

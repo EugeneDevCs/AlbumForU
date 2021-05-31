@@ -1,7 +1,9 @@
 ﻿using BusinessLogic.BusinessModels;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BusinessLogic.Interfaces
 {
@@ -12,5 +14,6 @@ namespace BusinessLogic.Interfaces
         IEnumerable<ThumbnailBusiness> GetThumbs(int page);
         IEnumerable<ThumbnailBusiness> GetFilteredByTopicThumbs(string topicId, int page);
         IEnumerable<ThumbnailBusiness> GetSearchedThumbs(string searchString);
+        Task AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID);
     }
 }

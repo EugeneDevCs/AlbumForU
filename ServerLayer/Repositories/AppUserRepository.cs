@@ -18,9 +18,9 @@ namespace ServerLayer.Repositories
             _appData = data;
         }
 
-        public void Create(AppUser item)
+        public AppUser Create(AppUser item)
         {
-            _appData.Users.Add(item); ;
+            return _appData.Users.Add(item).Entity;
         }
 
         public void Delete(string id)

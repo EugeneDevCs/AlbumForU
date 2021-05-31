@@ -63,7 +63,7 @@ namespace BusinessLogic.Services
             return mappedData.Map<IEnumerable<Thumbnail>, List<ThumbnailBusiness>>(((ThumbnailRepository)(dbAccess.Thumbnails)).FindSearch(searchString));
         }
 
-        public async void AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID)
+        public async Task AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID)
         {
             var mappedData = new MapperConfiguration(config => config.CreateMap<Topic, TopicBusiness>()).CreateMapper();
             string topicName = mappedData.Map<Topic, TopicBusiness>((dbAccess.Topics.Get(TopicId))).Name;
@@ -74,23 +74,16 @@ namespace BusinessLogic.Services
             {
                 Directory.CreateDirectory(webrootPath + "/" + directoryPath);
             }
-            string picturePath = directoryPath + "/" + Picture.FileName;
 
-            //Saving picture to our file system
-            using (var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew))
-            {
-                await Picture.CopyToAsync(fileStream);
-            }
-
-            //Check if the directory foe thumb exists
             string directoryPathThumb = "pictures/thumbs/" + topicName;
             if (!Directory.Exists(webrootPath + "/" + directoryPathThumb))
             {
                 Directory.CreateDirectory(webrootPath + "/" + directoryPathThumb);
             }
 
-            //Saving resized (width = 500px) thumb to our file system
+            string picturePath = directoryPath + "/" + Picture.FileName;
             string picturePaththumb = directoryPathThumb + "/" + Picture.FileName;
+
             using (var image = Image.Load(Picture.OpenReadStream()))
             {
                 int imageWidth = image.Width - (image.Width - 500);// now width = 500 px
@@ -103,11 +96,24 @@ namespace BusinessLogic.Services
                 image.SaveAsJpeg(webrootPath + "/" + picturePaththumb);
             }
 
+            //Saving picture to our file system
+            using (var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew))
+            {
+                await Picture.CopyToAsync(fileStream);
+            }
+
+            //Check if the directory foe thumb exists
+            
+
+            //Saving resized (width = 500px) thumb to our file system
+            
+            
 
 
-            string origId = dbAccess.Pictures.Create(new Picture() { Path = picturePath, Name = PictureName, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today });
-            appData.Thumbs.Add(new Thumbnail() { Path = picturePaththumb, OriginalId = origId, TopicId = viewModel.TopicId, UserId = currentUserID, Date = DateTime.Today });
-            appData.SaveChanges();
+
+            string origId = dbAccess.Pictures.Create(new Picture() { Path = picturePath, Name = PictureName, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
+            string thumbId= dbAccess.Thumbnails.Create(new Thumbnail() { Path = picturePaththumb, OriginalId = origId, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
+            dbAccess.Save();
         }
     }
 }

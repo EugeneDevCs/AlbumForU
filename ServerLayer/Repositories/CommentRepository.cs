@@ -17,9 +17,9 @@ namespace ServerLayer.Repositories
         {
             _appData = data;
         }
-        public void Create(Comment comment)
+        public Comment Create(Comment comment)
         {
-            _appData.Comments.Add(comment);
+           return _appData.Comments.Add(comment).Entity;
         }
 
         public void Delete(string id)

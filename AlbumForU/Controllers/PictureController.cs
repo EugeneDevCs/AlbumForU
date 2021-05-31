@@ -36,6 +36,7 @@ namespace AlbumForU.Controllers
         }
 
         [HttpGet]
+        [Route("/Picture/AddAPicture")]
         public IActionResult AddAPicture()
         {
             PictureCreationViewModel viewModel = new PictureCreationViewModel();
@@ -48,58 +49,26 @@ namespace AlbumForU.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAPicture(PictureCreationViewModel viewModel)
+        [Route("/Picture/AddAPicture")]
+        public IActionResult AddAPicture(PictureCreationViewModel viewModel)
         {
             if (ModelState.IsValid && viewModel.Picture != null)
             {
                 string currentUserID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                TopicBusiness topicBusiness = _topicService.GetCeratainTopic(viewModel.TopicId);
-                var mapperTopics = new MapperConfiguration(cfg => cfg.CreateMap<TopicBusiness, Topic>()).CreateMapper();
-                string topicName = mapperTopics.Map<TopicBusiness, Topic>(topicBusiness).Name;
-
-                //Check if the directory exists
-                string directoryPath = "pictures/originals/" + topicName;
-                if (!Directory.Exists(_appEnvironment.WebRootPath + "/" + directoryPath))
-                {
-                    Directory.CreateDirectory(_appEnvironment.WebRootPath + "/" + directoryPath);
-                }
-                string picturePath = directoryPath + "/" + viewModel.Picture.FileName;
-
-                //Saving picture to our file system
-                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + "/" + picturePath, FileMode.CreateNew))
-                {
-                    await viewModel.Picture.CopyToAsync(fileStream);
-                }
-
-                //Check if the directory foe thumb exists
-                string directoryPathThumb = "pictures/thumbs/" + topicName;
-                if (!Directory.Exists(_appEnvironment.WebRootPath + "/" + directoryPathThumb))
-                {
-                    Directory.CreateDirectory(_appEnvironment.WebRootPath + "/" + directoryPathThumb);
-                }
-
-                //Saving resized (width = 500px) thumb to our file system
-                string picturePaththumb = directoryPathThumb + "/" + viewModel.Picture.FileName;
-                using (var image = Image.Load(viewModel.Picture.OpenReadStream()))
-                {
-                    int imageWidth = image.Width - (image.Width - 500);// now width = 500 px
-
-                    int percents = imageWidth * 100 / image.Width; // now we know how many percents
-                                                                   //we should subtract
-                    int imageHeight = percents * image.Height / 100;//and now we have the image height
-
-                    image.Mutate(x => x.Resize(imageWidth, imageHeight));
-                    image.SaveAsJpeg(_appEnvironment.WebRootPath + "/" + picturePaththumb);
-                }
-
-                string origId = appData.Pictures.Add(new Picture() { Path = picturePath, Name = viewModel.PictureName, TopicId = viewModel.TopicId, UserId = currentUserID, Date = DateTime.Today }).Entity.Id;
-                appData.Thumbs.Add(new Thumbnail() { Path = picturePaththumb, OriginalId = origId, TopicId = viewModel.TopicId, UserId = currentUserID, Date = DateTime.Today });
-                appData.SaveChanges();
-
+                _pictureService.AddPicture(
+                    viewModel.PictureName,
+                    viewModel.TopicId,
+                    viewModel.Picture,
+                    _appEnvironment.WebRootPath,
+                    currentUserID);
                 TempData["Success"] = $"Picture was successfully uploaded!";
                 return Redirect("/Home/Index");
             }
+            return View();
+
+
+        }
 
             //    viewModel.Topics = (from topic in appData.Topics
             //                        select topic).ToList();
@@ -168,6 +137,6 @@ namespace AlbumForU.Controllers
             //    }
             //    return Redirect("CertainPicture/" + pictId);
             //}
-        }
+    }
 }
 

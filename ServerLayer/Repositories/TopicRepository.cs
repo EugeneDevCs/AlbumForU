@@ -18,9 +18,9 @@ namespace ServerLayer.Repositories
             _appData = data;
         }
 
-        public void Create(Topic item)
+        public Topic Create(Topic item)
         {
-            _appData.Topics.Add(item); ;
+            return _appData.Topics.Add(item).Entity ;
         }
 
         public void Delete(string id)

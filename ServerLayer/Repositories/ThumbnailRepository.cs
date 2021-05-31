@@ -18,9 +18,9 @@ namespace ServerLayer.Repositories
             _appData = data;
         }
 
-        public void Create(Thumbnail item)
+        public Thumbnail Create(Thumbnail item)
         {
-            _appData.Thumbs.Add(item); ;
+            return _appData.Thumbs.Add(item).Entity ;
         }
 
         public void Delete(string id)
