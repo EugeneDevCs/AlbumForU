@@ -9,7 +9,8 @@ namespace BusinessLogic.Interfaces
     {
         IEnumerable<PictureBusiness> GetPictures();
         IEnumerable<PictureBusiness> GetCeratainPicture(string oroginalId);
-        IEnumerable<ThumbnailBusiness> GetThumbs();
+        IEnumerable<ThumbnailBusiness> GetThumbs(int page);
+        IEnumerable<ThumbnailBusiness> GetFilteredByTopicThumbs(string topicId, int page);
         IEnumerable<ThumbnailBusiness> GetSearchedThumbs(string searchString);
     }
 }

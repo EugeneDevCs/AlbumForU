@@ -25,5 +25,11 @@ namespace BusinessLogic.Services
             return mappedData.Map<IEnumerable<Topic>, List<TopicBusiness>>(dbAccess.Topics.GetAll());
            
         }
+
+        public TopicBusiness GetCeratainTopic(string topicId)
+        {
+            var mappedData = new MapperConfiguration(config => config.CreateMap<Topic, TopicBusiness>()).CreateMapper();
+            return mappedData.Map<Topic, TopicBusiness>(dbAccess.Topics.Get(topicId));
+        }
     }
 }

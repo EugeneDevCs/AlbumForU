@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using BusinessLogic.BusinessModels;
 using BusinessLogic.Interfaces;
+using Microsoft.AspNetCore.Http;
 using ServerLayer.DataObtaining;
 using ServerLayer.Interfaces;
 using ServerLayer.Models;
 using ServerLayer.Repositories;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace BusinessLogic.Services
 {
-    public class PictureService:IPictureService
+    public class PictureService : IPictureService
     {
         //this object is to obtain data from server layer
-        IDbAccess dbAccess { get;  set; }
+        IDbAccess dbAccess { get; set; }
         public PictureService(IDbAccess db)
         {
             dbAccess = db;
@@ -22,30 +28,86 @@ namespace BusinessLogic.Services
         //here I use automapper to obtain objects from Server layer 
         //and map them to BL models
         public IEnumerable<PictureBusiness> GetPictures()
-        {            
+        {
             var mappedData = new MapperConfiguration(config => config.CreateMap<Picture, PictureBusiness>()).CreateMapper();
             return mappedData.Map<IEnumerable<Picture>, List<PictureBusiness>>(dbAccess.Pictures.GetAll());
         }
         public IEnumerable<PictureBusiness> GetCeratainPicture(string oroginalId)
-        {            
+        {
             var mappedData = new MapperConfiguration(config => config.CreateMap<Picture, PictureBusiness>()).CreateMapper();
             return mappedData.Map<IEnumerable<Picture>, List<PictureBusiness>>(dbAccess.Pictures.Find(p => p.Id == oroginalId));
         }
-        public IEnumerable<ThumbnailBusiness> GetThumbs()
-        {            
+        public IEnumerable<ThumbnailBusiness> GetThumbs(int page)
+        {
+            int indexFirst = 9 * (page - 1);
+            int indexLast = 9 * page +1;
+
             var mappedData = new MapperConfiguration(config => config.CreateMap<Thumbnail, ThumbnailBusiness>()).CreateMapper();
-            return mappedData.Map<IEnumerable<Thumbnail>, List<ThumbnailBusiness>>(dbAccess.Thumbnails.GetAll());
+            List<ThumbnailBusiness> thumbns = mappedData.Map<IEnumerable<Thumbnail>, List<ThumbnailBusiness>>(dbAccess.Thumbnails.GetAll());
+            return new List<ThumbnailBusiness>(from thum in thumbns.Where((s, i) => i >= indexFirst && i < indexLast)
+                                               select thum);
+        }
+        public IEnumerable<ThumbnailBusiness> GetFilteredByTopicThumbs(string topicId, int page)
+        {
+            int indexFirst = 9 * (page - 1);
+            int indexLast = 9 * page + 1;
+
+            var mappedData = new MapperConfiguration(config => config.CreateMap<Thumbnail, ThumbnailBusiness>()).CreateMapper();
+            List<ThumbnailBusiness> thumbns=mappedData.Map<IEnumerable<Thumbnail>, List<ThumbnailBusiness>>(dbAccess.Thumbnails.Find(th=>th.TopicId== topicId));
+            return new List<ThumbnailBusiness>(from thum in thumbns.Where((s, i) => i >= indexFirst && i < indexLast)
+                                               select thum);
         }
         public IEnumerable<ThumbnailBusiness> GetSearchedThumbs(string searchString)
-        {            
+        {
             var mappedData = new MapperConfiguration(config => config.CreateMap<Thumbnail, ThumbnailBusiness>()).CreateMapper();
             return mappedData.Map<IEnumerable<Thumbnail>, List<ThumbnailBusiness>>(((ThumbnailRepository)(dbAccess.Thumbnails)).FindSearch(searchString));
         }
-       
-        public IEnumerable<LikeBusiness> GetLikes(string pictureId)
-        {            
-            var mappedData = new MapperConfiguration(config => config.CreateMap<Like, LikeBusiness>()).CreateMapper();
-            return mappedData.Map<IEnumerable<Like>, List<LikeBusiness>>(dbAccess.Likes.Find(l=>l.PictureId == pictureId));
+
+        public async void AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID)
+        {
+            var mappedData = new MapperConfiguration(config => config.CreateMap<Topic, TopicBusiness>()).CreateMapper();
+            string topicName = mappedData.Map<Topic, TopicBusiness>((dbAccess.Topics.Get(TopicId))).Name;
+             
+            //Check if the directory exists
+            string directoryPath = "pictures/originals/" + topicName;
+            if (!Directory.Exists(webrootPath + "/" + directoryPath))
+            {
+                Directory.CreateDirectory(webrootPath + "/" + directoryPath);
+            }
+            string picturePath = directoryPath + "/" + Picture.FileName;
+
+            //Saving picture to our file system
+            using (var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew))
+            {
+                await Picture.CopyToAsync(fileStream);
+            }
+
+            //Check if the directory foe thumb exists
+            string directoryPathThumb = "pictures/thumbs/" + topicName;
+            if (!Directory.Exists(webrootPath + "/" + directoryPathThumb))
+            {
+                Directory.CreateDirectory(webrootPath + "/" + directoryPathThumb);
+            }
+
+            //Saving resized (width = 500px) thumb to our file system
+            string picturePaththumb = directoryPathThumb + "/" + Picture.FileName;
+            using (var image = Image.Load(Picture.OpenReadStream()))
+            {
+                int imageWidth = image.Width - (image.Width - 500);// now width = 500 px
+
+                int percents = imageWidth * 100 / image.Width; // now we know how many percents
+                                                               //we should subtract
+                int imageHeight = percents * image.Height / 100;//and now we have the image height
+
+                image.Mutate(x => x.Resize(imageWidth, imageHeight));
+                image.SaveAsJpeg(webrootPath + "/" + picturePaththumb);
+            }
+
+
+
+            string origId = dbAccess.Pictures.Create(new Picture() { Path = picturePath, Name = PictureName, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today });
+            appData.Thumbs.Add(new Thumbnail() { Path = picturePaththumb, OriginalId = origId, TopicId = viewModel.TopicId, UserId = currentUserID, Date = DateTime.Today });
+            appData.SaveChanges();
         }
     }
 }

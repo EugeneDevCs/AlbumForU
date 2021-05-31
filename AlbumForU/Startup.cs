@@ -10,7 +10,6 @@ using ServerLayer.DataObtaining;
 using ServerLayer.Interfaces;
 using ServerLayer.Repositories;
 using ServerLayer.Models;
-using ServerLayer.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,10 +30,7 @@ namespace AlbumForU
         
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<AppDataContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddDatabaseDeveloperPageExceptionFilter();
+            
 
             services.AddDefaultIdentity<AppUser>(options =>
             {
@@ -44,8 +40,6 @@ namespace AlbumForU
                 options.Password.RequireNonAlphanumeric = false;
             }).AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDataContext>();
             services.AddControllersWithViews();
-
-
 
             var connection = Configuration.GetConnectionString("DefaultConnection");
 
@@ -88,7 +82,7 @@ namespace AlbumForU
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{page?}");
                 endpoints.MapRazorPages();
             });
         }

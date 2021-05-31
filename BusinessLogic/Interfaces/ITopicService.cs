@@ -8,6 +8,8 @@ namespace BusinessLogic.Interfaces
     public interface ITopicService
     {
         IEnumerable<TopicBusiness> GetTopics();
-        
+
+        TopicBusiness GetCeratainTopic(string topicId);
+
     }
 }
