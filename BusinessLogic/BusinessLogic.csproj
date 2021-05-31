@@ -6,10 +6,15 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="Ninject" Version="3.3.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ServerLayer\ServerLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="AdditionalFunctional\" />
   </ItemGroup>
 
 </Project>

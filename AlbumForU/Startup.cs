@@ -7,11 +7,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServerLayer.DataObtaining;
+using ServerLayer.Interfaces;
+using ServerLayer.Repositories;
 using ServerLayer.Models;
+using ServerLayer.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLogic.Interfaces;
+using BusinessLogic.Services;
 
 namespace AlbumForU
 {
@@ -26,19 +31,34 @@ namespace AlbumForU
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDataContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDatabaseDeveloperPageExceptionFilter();
+            //services.AddDbContext<AppDataContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<AppUser>(options => {
+            services.AddDefaultIdentity<AppUser>(options =>
+            {
                 options.SignIn.RequireConfirmedEmail = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
-            })
-                .AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDataContext>();
+            }).AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDataContext>();
             services.AddControllersWithViews();
+
+
+
+            var connection = Configuration.GetConnectionString("DefaultConnection");
+
+            services.AddDbContext<AppDataContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("ServerLayer")));
+
+            services.AddTransient<IDbAccess, DbAccessRepository>();
+            services.AddTransient<IPictureService, PictureService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<ILikeService, LikeService>();
+            services.AddTransient<ITopicService, TopicService>();
+
+            services.AddMvc();
+
             services.AddRazorPages();
         }
 
