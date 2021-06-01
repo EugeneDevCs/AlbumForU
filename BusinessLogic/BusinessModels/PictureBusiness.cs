@@ -7,10 +7,11 @@ namespace BusinessLogic.BusinessModels
     public class PictureBusiness
     {
         public string Id { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public string TopicId { get; set; }
         public string UserId { get; set; }
-        public string UserNick { get; set; }
-        public string TextBody { get; set; }
-        public string PictureId { get; set; }
-        public DateTime dateTime { get; set; }
+        public DateTime Date { get; set; }
+        
     }
 }

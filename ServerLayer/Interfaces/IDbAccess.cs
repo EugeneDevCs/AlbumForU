@@ -1,4 +1,5 @@
-﻿using ServerLayer.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using ServerLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +15,7 @@ namespace ServerLayer.Interfaces
         IRepository<Thumbnail> Thumbnails { get; }
         IRepository<Topic> Topics { get; }
         IRepository<Like> Likes { get; }
+        IUserRoleRepository UserRoles { get; }
 
         //for data saving
         void Save();

@@ -21,6 +21,7 @@ namespace ServerLayer.Repositories
         private PictureRepository pictureRepository;
         private TopicRepository topicRepository;
         private CommentRepository commentRepository;
+        private UserRoleRepository userRoleRepository;
         public DbAccessRepository(AppDataContext data)
         {
             _appData = data;
@@ -84,6 +85,15 @@ namespace ServerLayer.Repositories
             }
         }
 
+        public IUserRoleRepository UserRoles
+        {
+            get
+            {
+                if (userRoleRepository == null)
+                    userRoleRepository = new UserRoleRepository(_appData);
+                return userRoleRepository;
+            }
+        }
         public void Save()
         {
             _appData.SaveChanges();

@@ -6,16 +6,12 @@ using System.Text;
 
 namespace AlbumForU.Models
 {
-    public class AppUser:IdentityUser
+    public class AppUser
     {
-        [PersonalData]
-        [Column(TypeName ="nvarchar(100)")]
+        public string Id { get; set; }
+        public string RoleId { get; set; }
         public string Firstname { get; set; }
-        [PersonalData]
-        [Column(TypeName = "nvarchar(100)")]
         public string Lastname { get; set; }
-        [PersonalData]
-        [Column(TypeName = "nvarchar(60)")]
         public string Nickname { get; set; }
     }
 }

@@ -30,6 +30,7 @@ namespace AlbumForU
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
             var connection = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<AppDataContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("ServerLayer")));
@@ -40,6 +41,8 @@ namespace AlbumForU
             services.AddTransient<ILikeService, LikeService>();
             services.AddTransient<ITopicService, TopicService>();
             services.AddTransient<IAppUserService, AppUserService>();
+            services.AddTransient<IUserRoleRepository, UserRoleRepository>();
+            services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 
             services.AddMvc();
 

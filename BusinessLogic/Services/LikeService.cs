@@ -22,7 +22,7 @@ namespace BusinessLogic.Services
         //and map them to BL models
         public int CountLikes(string pictureId)
         {
-            return dbAccess.Likes.GetAll().Count();            
+            return dbAccess.Likes.GetAll().Where(lk=>lk.PictureId==pictureId).Count();            
         }
 
         public IEnumerable<LikeBusiness> GetLikes(string pictureId)

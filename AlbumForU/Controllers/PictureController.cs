@@ -93,7 +93,7 @@ namespace AlbumForU.Controllers
             //obtaining the user
             AppUserBusiness appUserBusiness = _appUserService.GetUser(id);
             var mapperUser = new MapperConfiguration(cfg => cfg.CreateMap<AppUserBusiness, AppUser>()).CreateMapper();
-            picture.appUser = mapperPictures.Map<AppUserBusiness, AppUser>(appUserBusiness);
+            picture.appUser = mapperUser.Map<AppUserBusiness, AppUser>(appUserBusiness);
 
             //Quantity of Likes
             picture.QuantityLikes = _likeService.CountLikes(originalId);
