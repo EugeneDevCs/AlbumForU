@@ -71,7 +71,7 @@ namespace AlbumForU.Controllers
             var mapperTopics = new MapperConfiguration(cfg => cfg.CreateMap<TopicBusiness, Topic>()).CreateMapper();
             viewModel.Topics = mapperTopics.Map<IEnumerable<TopicBusiness>, List<Topic>>(topicBusinesses);
             ModelState.AddModelError("", "Fill in all fields!");
-            return View(viewModel); 
+            return View(viewModel);
         }
 
         [Route("Picture/CertainPicture/{originalId}")]
@@ -127,11 +127,12 @@ namespace AlbumForU.Controllers
         //    return Redirect("CertainPicture/" + TempData["originalId"]);
         //}
 
+        [Route("Picture/LikeDislike/{pictId}")]
         public IActionResult LikeDislike(string pictId)
         {
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             _likeService.ToLikeDisLike(userId, pictId);
-            return Redirect("CertainPicture/" + pictId);
+            return Redirect("~/Picture/CertainPicture/" + pictId);
         }
     }
 }

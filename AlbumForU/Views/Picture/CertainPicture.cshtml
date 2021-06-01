@@ -18,11 +18,11 @@
                 <p class="bg-info">@Model.QuantityLikes</p>
                 @if (Model.IsLiked == false)
                 {
-                    <a title="You can like this!" href="~/Picture/LikeDislike?pictId=@Model.Picture.Id"><i class="far fa-heart"></i></a>
+                    <a title="You can like this!" href="~/Picture/LikeDislike/@Model.Picture.Id"><i class="far fa-heart"></i></a>
                 }
                 else
                 {
-                    <a title="You already liked this!" href="~/Picture/LikeDislike?pictId=@Model.Picture.Id"><i class="fab fa-gratipay"></i></a>
+                    <a title="You already liked this!" href="~/Picture/LikeDislike/@Model.Picture.Id"><i class="fab fa-gratipay"></i></a>
                 }
             </div>
         </div>

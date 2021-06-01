@@ -50,8 +50,10 @@ namespace BusinessLogic.Services
             }
             else
             {
-                dbAccess.Likes.Create(like);
+                dbAccess.Likes.Create(new Like { PictureId=picId, UserId=userId,DateTime=DateTime.Today });
+                
             }
+            dbAccess.Save();
         }
     }
 }
