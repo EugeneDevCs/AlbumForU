@@ -8,7 +8,7 @@ namespace BusinessLogic.Interfaces
     public interface ICommentService
     {
         IEnumerable<CommentBusiness> GetComments(string pictureId);
-        void AddAComment(CommentBusiness comment);
+        void AddAComment(DateTime dt, string UserId, string textBody, string pictureId);
         CommentBusiness FindComment(string id);
         void DeleteComment(string id);
 

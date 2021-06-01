@@ -91,7 +91,7 @@ namespace AlbumForU.Controllers
             picture.Comments = mapperComments.Map<IEnumerable<CommentBusiness>, List<Comment>>(commentBusinesses);
 
             //obtaining the user
-            AppUserBusiness appUserBusiness = _appUserService.GetUser(id);
+            AppUserBusiness appUserBusiness = _appUserService.GetUser(picture.Picture.UserId);
             var mapperUser = new MapperConfiguration(cfg => cfg.CreateMap<AppUserBusiness, AppUser>()).CreateMapper();
             picture.appUser = mapperUser.Map<AppUserBusiness, AppUser>(appUserBusiness);
 
@@ -105,27 +105,21 @@ namespace AlbumForU.Controllers
             return View(picture);
         }
 
-        //[HttpPost]
-        //public IActionResult AddAComment(string commentBody)
-        //{
-        //    if(ModelState.IsValid && commentBody.Length>0)
-        //    {
-        //        Comment comment = new Comment()
-        //        {
-        //            dateTime = DateTime.Today,
-        //            UserId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value,
-        //            UserNick = (from user in appData.Users
-        //                        where user.Id == this.User.FindFirst(ClaimTypes.NameIdentifier).Value
-        //                        select user.Nickname).FirstOrDefault().ToString(),
-        //            TextBody=commentBody,
-        //            PictureId= TempData["originalId"].ToString()
-        //        };
-        //        appData.Comments.Add(comment);
-        //        appData.SaveChanges();
+        [HttpPost]
+        [Route("Picture/AddAComment")]
+        public IActionResult AddAComment(string commentBody)
+        {
+            if (ModelState.IsValid && commentBody.Length > 0)
+            {
+                _commentService.AddAComment(
+                    DateTime.Today,
+                    this.User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                    commentBody,
+                    TempData["originalId"].ToString());               
 
-        //    }            
-        //    return Redirect("CertainPicture/" + TempData["originalId"]);
-        //}
+            }
+            return Redirect("CertainPicture/" + TempData["originalId"]);
+        }
 
         [Route("Picture/LikeDislike/{pictId}")]
         public IActionResult LikeDislike(string pictId)

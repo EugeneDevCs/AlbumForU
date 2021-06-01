@@ -25,22 +25,23 @@ namespace BusinessLogic.Services
             return mappedData.Map<IEnumerable<Comment>, List<CommentBusiness>>(dbAccess.Comments.Find(c => c.PictureId == pictureId));
         }
 
-        public void AddAComment(CommentBusiness commentModel)
+        public void AddAComment(DateTime dt, string UserId, string textBody, string pictureId)
         {
-            if(commentModel == null)
+            if(textBody == null)
             {
                 throw new ArgumentNullException("Comment is empty!");
             }
-
+            string usernik = dbAccess.Users.Get(UserId).Nickname;
             Comment comment = new Comment() { 
-                dateTime = commentModel.dateTime,
-                UserId = commentModel.UserId,
-                UserNick = commentModel.UserNick,
-                PictureId=commentModel.PictureId,
-                TextBody=commentModel.TextBody
+                dateTime = dt,
+                UserId = UserId,
+                UserNick = usernik,
+                PictureId=pictureId,
+                TextBody=textBody
             };
 
             dbAccess.Comments.Create(comment);
+            dbAccess.Save();
 
         }
 
