@@ -40,15 +40,17 @@ namespace BusinessLogic.Services
             return false;
         }
 
-        public void ToLikeDisLike(LikeBusiness like, bool isLiked)
+        public void ToLikeDisLike(string userId, string picId)
         {
-            if(isLiked)
+            Like like = dbAccess.Likes.Find(lk => lk.UserId == userId && lk.PictureId == picId).FirstOrDefault();
+
+            if(like != null)
             {
-                dbAccess.Likes.Create(new Like { DateTime = DateTime.Today, PictureId = like.PictureId, UserId = like.UserId });
+                dbAccess.Likes.Delete(like.Id);
             }
             else
             {
-                dbAccess.Likes.Delete(like.Id);
+                dbAccess.Likes.Create(like);
             }
         }
     }

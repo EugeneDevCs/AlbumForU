@@ -30,17 +30,6 @@ namespace AlbumForU
         
         public void ConfigureServices(IServiceCollection services)
         {
-            
-
-            services.AddDefaultIdentity<AppUser>(options =>
-            {
-                options.SignIn.RequireConfirmedEmail = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-            }).AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDataContext>();
-            services.AddControllersWithViews();
-
             var connection = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<AppDataContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("ServerLayer")));
@@ -50,10 +39,23 @@ namespace AlbumForU
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<ILikeService, LikeService>();
             services.AddTransient<ITopicService, TopicService>();
+            services.AddTransient<IAppUserService, AppUserService>();
 
             services.AddMvc();
 
             services.AddRazorPages();
+
+
+            services.AddDefaultIdentity<AppUser>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+            }).AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<AppDataContext>();
+
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

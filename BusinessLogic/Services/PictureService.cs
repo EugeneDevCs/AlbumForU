@@ -32,10 +32,10 @@ namespace BusinessLogic.Services
             var mappedData = new MapperConfiguration(config => config.CreateMap<Picture, PictureBusiness>()).CreateMapper();
             return mappedData.Map<IEnumerable<Picture>, List<PictureBusiness>>(dbAccess.Pictures.GetAll());
         }
-        public IEnumerable<PictureBusiness> GetCeratainPicture(string oroginalId)
+        public PictureBusiness GetCeratainPicture(string oroginalId)
         {
             var mappedData = new MapperConfiguration(config => config.CreateMap<Picture, PictureBusiness>()).CreateMapper();
-            return mappedData.Map<IEnumerable<Picture>, List<PictureBusiness>>(dbAccess.Pictures.Find(p => p.Id == oroginalId));
+            return mappedData.Map<Picture, PictureBusiness>(dbAccess.Pictures.Get(oroginalId));
         }
         public IEnumerable<ThumbnailBusiness> GetThumbs(int page)
         {

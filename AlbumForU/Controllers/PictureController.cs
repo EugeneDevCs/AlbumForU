@@ -25,14 +25,16 @@ namespace AlbumForU.Controllers
         private readonly ILikeService _likeService;
         private readonly ICommentService _commentService;
         private readonly ITopicService _topicService;
+        private readonly IAppUserService _appUserService;
         IWebHostEnvironment _appEnvironment;
-        public PictureController(IWebHostEnvironment appEnvironment, IPictureService pics, ICommentService cms, ILikeService lks, ITopicService tcs)
+        public PictureController(IWebHostEnvironment appEnvironment, IPictureService pics, ICommentService cms, ILikeService lks, ITopicService tcs, IAppUserService usrs)
         {
             _pictureService = pics;
             _commentService = cms;
             _likeService = lks;
             _topicService = tcs;
             _appEnvironment = appEnvironment;
+            _appUserService = usrs;
         }
 
         [HttpGet]
@@ -65,78 +67,72 @@ namespace AlbumForU.Controllers
                 TempData["Success"] = $"Picture was successfully uploaded!";
                 return Redirect("/Home/Index");
             }
-            return View();
-
-
+            List<TopicBusiness> topicBusinesses = _topicService.GetTopics().ToList();
+            var mapperTopics = new MapperConfiguration(cfg => cfg.CreateMap<TopicBusiness, Topic>()).CreateMapper();
+            viewModel.Topics = mapperTopics.Map<IEnumerable<TopicBusiness>, List<Topic>>(topicBusinesses);
+            ModelState.AddModelError("", "Fill in all fields!");
+            return View(viewModel); 
         }
 
-            //    viewModel.Topics = (from topic in appData.Topics
-            //                        select topic).ToList();
-            //    ModelState.AddModelError("", "Fill in all fields!");
-            //    return View(viewModel);
-            //}
+        [Route("Picture/CertainPicture/{originalId}")]
+        public IActionResult CertainPicture(string originalId)
+        {
+            PictureViewModel picture = new PictureViewModel();
+            string id = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            //obtaining the picture
+            PictureBusiness pictureBusiness = _pictureService.GetCeratainPicture(originalId);
+            var mapperPictures = new MapperConfiguration(cfg => cfg.CreateMap<PictureBusiness, Picture>()).CreateMapper();
+            picture.Picture = mapperPictures.Map<PictureBusiness, Picture>(pictureBusiness);
 
-            //[Route("Picture/CertainPicture/{originalId}")]
-            //public IActionResult CertainPicture(string originalId)
-            //{
-            //    PictureViewModel picture = new PictureViewModel();
-            //    string id = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //    picture.Picture = (from pic in appData.Pictures
-            //                       where pic.Id == originalId
-            //                       select pic).FirstOrDefault();
-            //    picture.Comments = (from cmt in appData.Comments
-            //                     where cmt.PictureId == originalId
-            //                     select cmt).ToList();
-            //    picture.Like = (from like in appData.Likes
-            //                     where like.PictureId == originalId
-            //                     select like).FirstOrDefault();
-            //    picture.appUser = (from user in appData.Users
-            //                       where user.Id == picture.Picture.UserId
-            //                       select user).FirstOrDefault();
+            //obtaining the comments
+            List<CommentBusiness> commentBusinesses = _commentService.GetComments(originalId).ToList();
+            var mapperComments = new MapperConfiguration(cfg => cfg.CreateMap<CommentBusiness, Comment>()).CreateMapper();
+            picture.Comments = mapperComments.Map<IEnumerable<CommentBusiness>, List<Comment>>(commentBusinesses);
 
-            //    TempData["originalId"] = originalId;
-            //    return View(picture);
-            //}
+            //obtaining the user
+            AppUserBusiness appUserBusiness = _appUserService.GetUser(id);
+            var mapperUser = new MapperConfiguration(cfg => cfg.CreateMap<AppUserBusiness, AppUser>()).CreateMapper();
+            picture.appUser = mapperPictures.Map<AppUserBusiness, AppUser>(appUserBusiness);
 
-            //[HttpPost]
-            //public IActionResult AddAComment(string commentBody)
-            //{
-            //    if(ModelState.IsValid && commentBody.Length>0)
-            //    {
-            //        Comment comment = new Comment()
-            //        {
-            //            dateTime = DateTime.Today,
-            //            UserId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value,
-            //            UserNick = (from user in appData.Users
-            //                        where user.Id == this.User.FindFirst(ClaimTypes.NameIdentifier).Value
-            //                        select user.Nickname).FirstOrDefault().ToString(),
-            //            TextBody=commentBody,
-            //            PictureId= TempData["originalId"].ToString()
-            //        };
-            //        appData.Comments.Add(comment);
-            //        appData.SaveChanges();
+            //Quantity of Likes
+            picture.QuantityLikes = _likeService.CountLikes(originalId);
 
-            //    }            
-            //    return Redirect("CertainPicture/" + TempData["originalId"]);
-            //}
-            //public IActionResult LikeDislike(int like, string pictId)
-            //{
-            //    if(like == 1)
-            //    {
-            //        appData.Likes.Add(new Like { DateTime = DateTime.Today, PictureId = pictId, UserId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value });
-            //        appData.SaveChanges();
-            //    }
-            //    else
-            //    {
-            //        Like removeLike = (from lk in appData.Likes
-            //                            where lk.PictureId == pictId && lk.UserId == this.User.FindFirst(ClaimTypes.NameIdentifier).Value
-            //                            select lk).FirstOrDefault();
-            //        appData.Likes.Remove(removeLike);
-            //        appData.SaveChanges();
-            //    }
-            //    return Redirect("CertainPicture/" + pictId);
-            //}
+            //Is liked?
+            picture.IsLiked = _likeService.IsLiked(id, originalId);
+
+            TempData["originalId"] = originalId;
+            return View(picture);
+        }
+
+        //[HttpPost]
+        //public IActionResult AddAComment(string commentBody)
+        //{
+        //    if(ModelState.IsValid && commentBody.Length>0)
+        //    {
+        //        Comment comment = new Comment()
+        //        {
+        //            dateTime = DateTime.Today,
+        //            UserId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value,
+        //            UserNick = (from user in appData.Users
+        //                        where user.Id == this.User.FindFirst(ClaimTypes.NameIdentifier).Value
+        //                        select user.Nickname).FirstOrDefault().ToString(),
+        //            TextBody=commentBody,
+        //            PictureId= TempData["originalId"].ToString()
+        //        };
+        //        appData.Comments.Add(comment);
+        //        appData.SaveChanges();
+
+        //    }            
+        //    return Redirect("CertainPicture/" + TempData["originalId"]);
+        //}
+
+        public IActionResult LikeDislike(string pictId)
+        {
+            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            _likeService.ToLikeDisLike(userId, pictId);
+            return Redirect("CertainPicture/" + pictId);
+        }
     }
 }
 

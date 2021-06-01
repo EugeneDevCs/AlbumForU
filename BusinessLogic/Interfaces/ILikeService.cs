@@ -8,7 +8,7 @@ namespace BusinessLogic.Interfaces
     public interface ILikeService
     {
         IEnumerable<LikeBusiness> GetLikes(string pictureId);
-        void ToLikeDisLike(LikeBusiness like, bool isLiked);
+        void ToLikeDisLike(string userId, string picId);
         bool IsLiked(string userId,string pictureId);
         int CountLikes(string pictureId);
 

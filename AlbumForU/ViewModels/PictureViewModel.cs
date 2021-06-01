@@ -10,7 +10,8 @@ namespace AlbumForU.ViewModels
     {
         public Picture Picture { get; set; }
         public List<Comment> Comments { get; set; }
-        public Like Like { get; set; }
+        public int QuantityLikes { get; set; }
+        public bool IsLiked { get; set; }
         public AppUser appUser{get;set;}
     }
 }
