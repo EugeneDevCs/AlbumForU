@@ -15,6 +15,7 @@ namespace ServerLayer.Interfaces
         IRepository<Thumbnail> Thumbnails { get; }
         IRepository<Topic> Topics { get; }
         IRepository<Like> Likes { get; }
+        IRepository<IdentityRole> Roles { get; }
         IUserRoleRepository UserRoles { get; }
 
         //for data saving

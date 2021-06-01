@@ -43,6 +43,7 @@ namespace AlbumForU
             services.AddTransient<IAppUserService, AppUserService>();
             services.AddTransient<IUserRoleRepository, UserRoleRepository>();
             services.AddTransient<IUserRoleRepository, UserRoleRepository>();
+            services.AddTransient<IRoleService, RoleService>();
 
             services.AddMvc();
 

@@ -10,6 +10,6 @@ namespace ServerLayer.Interfaces
     {
         void Appoint(string roleId,string userId);
         void Disappoint(string roleId, string userId);
-        IEnumerable<IdentityUserRole<string>> GetAllAppointedUsers();
+
     }
 }

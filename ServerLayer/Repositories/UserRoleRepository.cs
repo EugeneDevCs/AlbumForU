@@ -33,10 +33,5 @@ namespace ServerLayer.Repositories
                 UserId = userId
             });
         }
-
-        public IEnumerable<IdentityUserRole<string>> GetAllAppointedUsers()
-        {
-            return _appData.UserRoles;
-        }
     }
 }

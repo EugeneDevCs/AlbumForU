@@ -10,6 +10,8 @@ namespace BusinessLogic.Interfaces
         IEnumerable<TopicBusiness> GetTopics();
 
         TopicBusiness GetCeratainTopic(string topicId);
-
+        void Create(string name);
+        void Delete(string id);
+        void Update(TopicBusiness topic)
     }
 }

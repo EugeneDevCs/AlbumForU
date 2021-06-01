@@ -31,5 +31,23 @@ namespace BusinessLogic.Services
             var mappedData = new MapperConfiguration(config => config.CreateMap<Topic, TopicBusiness>()).CreateMapper();
             return mappedData.Map<Topic, TopicBusiness>(dbAccess.Topics.Get(topicId));
         }
+        public void Delete(string id)
+        {
+            dbAccess.Topics.Delete(id);
+            dbAccess.Save();
+        }
+
+        public void Create(string name)
+        {
+            dbAccess.Topics.Create(new Topic { Name = name });
+            dbAccess.Save();
+        }
+        public void Update(TopicBusiness topic)
+        {
+            var mappedData = new MapperConfiguration(config => config.CreateMap<TopicBusiness, Topic>()).CreateMapper();
+            Topic updateTopic = mappedData.Map<TopicBusiness, Topic>(topic);
+            dbAccess.Topics.Update(updateTopic);
+            dbAccess.Save();
+        }
     }
 }

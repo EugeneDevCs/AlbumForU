@@ -5,6 +5,7 @@ using ServerLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace ServerLayer.Repositories
 {
@@ -22,6 +23,7 @@ namespace ServerLayer.Repositories
         private TopicRepository topicRepository;
         private CommentRepository commentRepository;
         private UserRoleRepository userRoleRepository;
+        private RoleRepository roleRepository;
         public DbAccessRepository(AppDataContext data)
         {
             _appData = data;
@@ -94,6 +96,18 @@ namespace ServerLayer.Repositories
                 return userRoleRepository;
             }
         }
+
+        public IRepository<IdentityRole> Roles
+        {
+            get
+            {
+                if (roleRepository == null)
+                    roleRepository = new RoleRepository(_appData);
+                return roleRepository;
+            }
+        }
+
+
         public void Save()
         {
             _appData.SaveChanges();
