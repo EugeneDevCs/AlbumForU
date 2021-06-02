@@ -128,6 +128,16 @@ namespace AlbumForU.Controllers
             _likeService.ToLikeDisLike(userId, pictId);
             return Redirect("~/Picture/CertainPicture/" + pictId);
         }
+        
+        [Route("Picture/Delete/{pictId}")]
+        public IActionResult Delete(string pictId)
+        {
+            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            _likeService.ToLikeDisLike(userId, pictId);
+            return Redirect("~/Picture/CertainPicture/" + pictId);
+        }
+
+
     }
 }
 

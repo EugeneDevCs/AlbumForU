@@ -35,15 +35,15 @@ namespace AlbumForU
 
             services.AddDbContext<AppDataContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("ServerLayer")));
 
-            services.AddTransient<IDbAccess, DbAccessRepository>();
-            services.AddTransient<IPictureService, PictureService>();
-            services.AddTransient<ICommentService, CommentService>();
-            services.AddTransient<ILikeService, LikeService>();
-            services.AddTransient<ITopicService, TopicService>();
-            services.AddTransient<IAppUserService, AppUserService>();
-            services.AddTransient<IUserRoleRepository, UserRoleRepository>();
-            services.AddTransient<IUserRoleRepository, UserRoleRepository>();
-            services.AddTransient<IRoleService, RoleService>();
+            services.AddScoped<IDbAccess, DbAccessRepository>();
+            services.AddScoped<IPictureService, PictureService>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ILikeService, LikeService>();
+            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<IAppUserService, AppUserService>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IRoleService, RoleService>();
 
             services.AddMvc();
 

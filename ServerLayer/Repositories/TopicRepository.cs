@@ -44,12 +44,16 @@ namespace ServerLayer.Repositories
 
         public IEnumerable<Topic> GetAll()
         {
-            return _appData.Topics;
+            return _appData.Topics.AsNoTracking();
         }
 
         public void Update(Topic item)
         {
-            _appData.Entry(item).State = EntityState.Modified;
+            //here I create new instance of topic 
+            //to avoid tracking 
+            Topic topic = _appData.Topics.Find(item.Id);
+            topic.Name = item.Name;
+            _appData.Topics.Update(topic);
         }
     }
 }

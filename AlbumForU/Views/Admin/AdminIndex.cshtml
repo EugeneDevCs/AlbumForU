@@ -11,8 +11,6 @@
 
 @if (User.IsInRole("admin"))
 { 
-    <a class="btn btn-primary" asp-action="AddANewRole">Add a new role</a>
     <a class="btn btn-primary" asp-action="AppointSmn">Appoint someone to role</a>
 }
-<a class="btn btn-primary" asp-action="AddNewTopic">Manage topics</a>
-<a class="btn btn-primary" asp-action="AddNewTopic">Mange photos</a>
+<a class="btn btn-primary" asp-action="ManageTopics">Manage topics</a>

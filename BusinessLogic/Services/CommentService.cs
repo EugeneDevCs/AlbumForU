@@ -77,6 +77,7 @@ namespace BusinessLogic.Services
             }
 
             dbAccess.Comments.Delete(id);
+            dbAccess.Save();
         }
     }
 }

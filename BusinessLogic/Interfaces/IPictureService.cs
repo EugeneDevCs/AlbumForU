@@ -13,6 +13,7 @@ namespace BusinessLogic.Interfaces
         PictureBusiness GetCeratainPicture(string oroginalId);
         IEnumerable<ThumbnailBusiness> GetThumbs(int page);
         IEnumerable<ThumbnailBusiness> GetFilteredByTopicThumbs(string topicId, int page);
+        void Delete(string id, string webrootPath);
         IEnumerable<ThumbnailBusiness> GetSearchedThumbs(string searchString);
         Task AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID);
     }

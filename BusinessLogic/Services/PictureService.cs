@@ -107,12 +107,43 @@ namespace BusinessLogic.Services
 
             //Saving resized (width = 500px) thumb to our file system
             
-            
-
-
-
             string origId = dbAccess.Pictures.Create(new Picture() { Path = picturePath, Name = PictureName, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
             string thumbId= dbAccess.Thumbnails.Create(new Thumbnail() { Path = picturePaththumb, OriginalId = origId, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
+            dbAccess.Save();
+        }
+
+        public void Delete(string id, string webrootPath)
+        {
+            Picture delPic = dbAccess.Pictures.Get(id);
+            Thumbnail delThumb = dbAccess.Thumbnails.Find(th => th.OriginalId == id).FirstOrDefault();
+            IEnumerable<Comment> delComments = dbAccess.Comments.Find(th => th.PictureId == id);
+            IEnumerable<Like> delLikes = dbAccess.Likes.Find(lk => lk.PictureId == id);
+
+
+            if (System.IO.File.Exists(webrootPath +"/"+ delPic.Path))
+            {
+                System.IO.File.Delete(webrootPath + "/" + delPic.Path);
+            }
+
+            if (System.IO.File.Exists(webrootPath +"/"+ delThumb.Path))
+            {
+                System.IO.File.Delete(webrootPath + "/" + delThumb.Path);
+            }
+
+            
+
+            foreach (var comment in delComments)
+            {
+                dbAccess.Comments.Delete(comment.Id);
+            }
+            foreach (var like in delLikes)
+            {
+                dbAccess.Likes.Delete(like.Id);
+            }
+
+            dbAccess.Thumbnails.Delete(delThumb.Id);
+            dbAccess.Pictures.Delete(id);
+
             dbAccess.Save();
         }
     }

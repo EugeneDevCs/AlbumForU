@@ -31,9 +31,18 @@ namespace BusinessLogic.Services
             var mappedData = new MapperConfiguration(config => config.CreateMap<Topic, TopicBusiness>()).CreateMapper();
             return mappedData.Map<Topic, TopicBusiness>(dbAccess.Topics.Get(topicId));
         }
-        public void Delete(string id)
+        public void Delete(string id, string webrootPath)
         {
+            
+            IEnumerable<Picture> delPicture = dbAccess.Pictures.Find(th => th.TopicId == id);
+            PictureService pictureService = new PictureService(dbAccess);
+            foreach(var pic in delPicture)
+            {
+                pictureService.Delete(id,webrootPath);
+            }
+
             dbAccess.Topics.Delete(id);
+
             dbAccess.Save();
         }
 
@@ -44,10 +53,15 @@ namespace BusinessLogic.Services
         }
         public void Update(TopicBusiness topic)
         {
-            var mappedData = new MapperConfiguration(config => config.CreateMap<TopicBusiness, Topic>()).CreateMapper();
-            Topic updateTopic = mappedData.Map<TopicBusiness, Topic>(topic);
-            dbAccess.Topics.Update(updateTopic);
-            dbAccess.Save();
+            Topic original =dbAccess.Topics.Get(topic.Id);
+            if(original.Name!=topic.Name)
+            {
+                var mappedData = new MapperConfiguration(config => config.CreateMap<TopicBusiness, Topic>()).CreateMapper();
+                Topic updateTopic = mappedData.Map<TopicBusiness, Topic>(topic);
+                dbAccess.Topics.Update(updateTopic);
+                dbAccess.Save();
+            }
+                        
         }
     }
 }

@@ -11,7 +11,7 @@ namespace BusinessLogic.Interfaces
 
         TopicBusiness GetCeratainTopic(string topicId);
         void Create(string name);
-        void Delete(string id);
-        void Update(TopicBusiness topic)
+        void Delete(string id, string webrootPath);
+        void Update(TopicBusiness topic);
     }
 }

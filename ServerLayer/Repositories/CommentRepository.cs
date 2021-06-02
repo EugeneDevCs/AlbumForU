@@ -49,7 +49,16 @@ namespace ServerLayer.Repositories
 
         public void Update(Comment comment)
         {
-            _appData.Entry(comment).State = EntityState.Modified;
+            //here I create new instance of comment 
+            //to avoid tracking
+            Comment updatedComment = _appData.Comments.Find(comment.Id);
+
+            updatedComment.PictureId = comment.PictureId;
+            updatedComment.TextBody = comment.TextBody;
+            updatedComment.UserId = comment.UserId;
+            updatedComment.UserNick = comment.UserNick;
+
+            _appData.Comments.Update(updatedComment);
         }
     }
 }

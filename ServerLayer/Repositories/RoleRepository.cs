@@ -50,7 +50,13 @@ namespace ServerLayer.Repositories
 
         public void Update(IdentityRole item)
         {
-            _appData.Entry(item).State = EntityState.Modified;
+            //here I create new instance of role 
+            //to avoid tracking 
+            IdentityRole role = _appData.Roles.Find(item.Id);
+
+            role.Name = item.Name;
+
+            _appData.Roles.Update(item);
         }
     }
 }

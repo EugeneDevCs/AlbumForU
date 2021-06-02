@@ -49,7 +49,15 @@ namespace ServerLayer.Repositories
 
         public void Update(Like item)
         {
-            _appData.Entry(item).State = EntityState.Modified;
+            //here I create new instance of like 
+            //to avoid tracking
+            Like like = _appData.Likes.Find(item.Id);
+
+            like.PictureId = item.PictureId;
+            like.UserId = item.UserId;
+            like.DateTime = item.DateTime;
+
+            _appData.Likes.Update(like);
         }
     }
 }

@@ -49,7 +49,16 @@ namespace ServerLayer.Repositories
 
         public void Update(AppUser item)
         {
-            _appData.Entry(item).State = EntityState.Modified;
+            //here I create new instance of user 
+            //to avoid tracking
+            AppUser appUser = _appData.Users.Find(item.Id);
+
+            appUser.Lastname = item.Lastname;
+            appUser.Firstname = item.Firstname;
+            appUser.Nickname = item.Nickname;
+            appUser.Email = item.Email;
+
+            _appData.Users.Update(appUser);
         }
     }
 }

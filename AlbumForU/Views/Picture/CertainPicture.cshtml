@@ -4,12 +4,16 @@
 @using AlbumForU.ViewModels
 @model PictureViewModel
 <div class="certaine_picture_page">
+    @if (User.IsInRole("admin")||User.IsInRole("manager"))
+    {
+        <a class="btn btn-danger" href="~/Admin/DeletePictures/@Model.Picture.Id">Delete picture</a>
+    }
     <div class="card">
         <div class="picture_orig_contayner">
             <img src="~/@Model.Picture.Path" />
         </div>
         <div class="picture_info_like">
-            <div class="picture_info">                
+            <div class="picture_info">
                 <h4>Tittle: <strong>@Model.Picture.Name</strong></h4>
                 <h5>Author: <strong>@Model.appUser.Nickname</strong></h5>
                 <h6>@Model.Picture.Date.ToShortDateString()</h6>
@@ -46,18 +50,22 @@
                 <div class="comments_list">
                     @foreach (var comment in Model.Comments)
                     {
-                        <div class="comment_contayner">
-                            <div class="comment_avatar"><i class="fas fa-user-astronaut"></i></div>
-                            <div class="comment_body">
-                                <strong>@comment.UserNick</strong>
-                                <div class="comment_date">@comment.dateTime.ToShortDateString()</div>
-                                <div class="text-body">@comment.TextBody</div>
-                            </div>
+                    <div class="comment_contayner">
+                        <div class="comment_avatar"><i class="fas fa-user-astronaut"></i></div>
+                        <div class="comment_body">
+                            <strong>@comment.UserNick</strong>
+                            <div class="comment_date">@comment.dateTime.ToShortDateString()</div>
+                            <div class="text-body">@comment.TextBody</div>
                         </div>
+                        @if (User.IsInRole("admin") || User.IsInRole("manager"))
+                        {
+                            <a class="btn btn-danger" href="~/Admin/DeleteComment?id=@comment.Id&pictId=@Model.Picture.Id">Delete comment</a>
+                        }
+                    </div>
                     }
                 </div>
             }
         </div>
-        
+
     </div>
 </div>

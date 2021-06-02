@@ -50,7 +50,16 @@ namespace ServerLayer.Repositories
 
         public void Update(Picture picture)
         {
-            _appData.Entry(picture).State = EntityState.Modified;
+            //here I create new instance of pic 
+            //to avoid tracking 
+            Picture updatedPic = _appData.Pictures.Find(picture.Id);
+
+            updatedPic.Name = picture.Name;
+            updatedPic.Path = picture.Path;
+            updatedPic.TopicId = picture.TopicId;
+            updatedPic.UserId = picture.UserId;
+
+            _appData.Pictures.Update(updatedPic);
         }
     }
 }

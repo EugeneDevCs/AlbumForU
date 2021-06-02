@@ -58,7 +58,17 @@ namespace ServerLayer.Repositories
 
         public void Update(Thumbnail item)
         {
-            _appData.Entry(item).State = EntityState.Modified;
+            //here I create new instance of thumb 
+            //to avoid tracking 
+            Thumbnail thumb = _appData.Thumbs.Find(item.Id);
+
+            thumb.OriginalId = item.OriginalId;
+            thumb.Path = item.Path;
+            thumb.Date = item.Date;
+            thumb.TopicId = item.TopicId;
+            thumb.UserId = item.UserId;
+
+            _appData.Thumbs.Update(thumb);
         }
     }
 }
