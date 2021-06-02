@@ -17,5 +17,6 @@ namespace ServerLayer.Models
         [PersonalData]
         [Column(TypeName = "nvarchar(60)")]
         public string Nickname { get; set; }
+
     }
 }

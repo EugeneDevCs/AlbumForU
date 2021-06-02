@@ -27,6 +27,7 @@ namespace AlbumForU
                 {
                     var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    //initializing db with custom roles
                     await RoleInitializer.InitializeAsync(userManager, rolesManager);
                 }
                 catch (Exception ex)

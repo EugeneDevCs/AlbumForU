@@ -9,13 +9,10 @@ namespace ServerLayer.Models
     public class Like
     {
         [Key]
-        [Column(Order = 1)]
-        public string UserId { get; set; }
-        
-        [Key]
-        [Column(Order = 2)]
-        public string PictureId { get; set; }
-        
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
+        public string UserId { get; set; }       
+        public string PictureId { get; set; }        
         public DateTime DateTime { get; set; }
 
 

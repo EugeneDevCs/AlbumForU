@@ -26,54 +26,48 @@
         }
     </div>
     <div class="pictures_grid">
-        <div class="grid_column">
-            @foreach (var pic in Model.ThumbsFirstColumn)
+            @if(Model.ThumbsFirstColumn.Count() > 0)
             {
-                <a href="~/Picture/CertainPicture/@pic.OriginalId" class="thumb_link_contayner">
-                    <div class="thumb_wrapper">
-                        <img src="~/@pic.Path" />
-                    </div>
-                </a>
+                <div class="grid_column">
+                    @foreach (var pic in Model.ThumbsFirstColumn)
+                    {
+                        <a href="~/Picture/CertainPicture/@pic.OriginalId" class="thumb_link_contayner">
+                            <div class="thumb_wrapper">
+                                <img src="~/@pic.Path" />
+                            </div>
+                        </a>
+                    }
+            
+                </div>
             }
-        </div>
-        @if (Model.ThumbsSecondColumn.Count() > 0)
-        {
-            <div class="grid_column">
-                @foreach (var pic in Model.ThumbsSecondColumn)
-                {
-                    <a href="~/Picture/CertainPicture/@pic.OriginalId" class="thumb_link_contayner">
-                        <div class="thumb_wrapper">
-                            <img src="~/@pic.Path" />
-                        </div>
-                    </a>
-                }
-            </div>
-        }
+            @if (Model.ThumbsSecondColumn.Count() > 0)
+            {
+                <div class="grid_column">
+                    @foreach (var pic in Model.ThumbsSecondColumn)
+                    {
+                        <a href="~/Picture/CertainPicture/@pic.OriginalId" class="thumb_link_contayner">
+                            <div class="thumb_wrapper">
+                                <img src="~/@pic.Path" />
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
 
-        @if (Model.ThumbsThirdColumn.Count() > 0)
-        {
-            <div class="grid_column">
-                @foreach (var pic in Model.ThumbsThirdColumn)
-                {
-                    <a href="~/Picture/CertainPicture/@pic.OriginalId" class="thumb_link_contayner">
-                        <div class="thumb_wrapper">
-                            <img src="~/@pic.Path" />
-                        </div>
-                    </a>
-                }
-            </div>
-        }
+            @if (Model.ThumbsThirdColumn.Count() > 0)
+            {
+                <div class="grid_column">
+                    @foreach (var pic in Model.ThumbsThirdColumn)
+                    {
+                        <a href="~/Picture/CertainPicture/@pic.OriginalId" class="thumb_link_contayner">
+                            <div class="thumb_wrapper">
+                                <img src="~/@pic.Path" />
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
 
     </div>
-    @if (ViewBag.NextPageNum != null)
-    {
-        <div class="page_nums_block">
-            @if (ViewBag.PrevPage > 0)
-            {
-                <a href="~/Home/Index/@ViewBag.PrevPage" class="page_control_butt"><i class="fas fa-arrow-left"></i></a>
-            }
-            <a href="~/Home/Index/@ViewBag.NextPageNum" class="page_control_butt"><i class="fas fa-arrow-right"></i></a>
-        </div>
-    }
 
 </div>

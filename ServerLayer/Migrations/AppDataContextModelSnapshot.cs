@@ -267,6 +267,10 @@ namespace ServerLayer.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("UserId", "PictureId");
 
                     b.ToTable("Likes");

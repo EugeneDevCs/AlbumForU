@@ -1,0 +1,38 @@
+﻿@{
+    Layout = "~/Views/Admin/_Admin_Layout.cshtml";
+}
+@using AlbumForU.Models
+@model List<Topic>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+<div class="alert-danger">
+    @Html.ValidationSummary()
+</div>
+<div class="card">
+    <form method="post">
+        <div class="form-group">
+            <label>Topic name</label>
+            <input name="topicName" type="text" required class="form-control" />
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Create</button>
+        </div>
+    </form>
+    <br />
+    <br />
+    <div class="card half-width">
+        @foreach(var topic in Model)
+        {
+            <div class="list-group">
+                <h5>@topic.Name</h5>
+                <a href="~/Admin/ManageTopics/Edit/@topic.Id" class="btn btn-info">Edit</a>
+                <a href="~/Admin/ManageTopics/Delete/@topic.Id" class="btn btn-danger">Delete</a>
+            </div>
+        }
+    </div>
+</div>

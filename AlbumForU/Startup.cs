@@ -7,11 +7,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServerLayer.DataObtaining;
+using ServerLayer.Interfaces;
+using ServerLayer.Repositories;
 using ServerLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLogic.Interfaces;
+using BusinessLogic.Services;
 
 namespace AlbumForU
 {
@@ -26,20 +30,36 @@ namespace AlbumForU
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDataContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddAutoMapper(typeof(Startup));
+            var connection = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDefaultIdentity<AppUser>(options => {
+            services.AddDbContext<AppDataContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("ServerLayer")));
+
+            services.AddScoped<IDbAccess, DbAccessRepository>();
+            services.AddScoped<IPictureService, PictureService>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ILikeService, LikeService>();
+            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<IAppUserService, AppUserService>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IRoleService, RoleService>();
+
+            services.AddMvc();
+
+            services.AddRazorPages();
+
+
+            services.AddDefaultIdentity<AppUser>(options =>
+            {
                 options.SignIn.RequireConfirmedEmail = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
-            })
-                .AddRoles<IdentityRole>().AddEntityFrameworkStores<AppDataContext>();
+            }).AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<AppDataContext>();
+
             services.AddControllersWithViews();
-            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,7 +88,7 @@ namespace AlbumForU
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{page?}");
                 endpoints.MapRazorPages();
             });
         }

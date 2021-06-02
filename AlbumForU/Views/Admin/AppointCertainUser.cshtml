@@ -4,6 +4,9 @@
 @using AlbumForU.ViewModels.AdminViewModels
 @model UserRoleRelation
 <a class="btn" asp-action="AppointSmn">Back</a>
+<div class="alert-danger">
+    @Html.ValidationSummary()
+</div>
 <div class="card">
     <div class="card-body">
         <form method="post">

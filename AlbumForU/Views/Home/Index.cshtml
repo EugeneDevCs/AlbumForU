@@ -21,7 +21,7 @@
     <div class="topics_butts">
         @foreach (var butt in Model.Topics)
         {
-            <a class="btn btn-info" href="~/Home/Index/@butt.Id/0">@butt.Name</a>
+            <a class="btn btn-info" href="~/Home/Index/@butt.Id/1">@butt.Name</a>
         }
     </div>
     <div class="pictures_grid">
@@ -64,15 +64,18 @@
         }
 
     </div>
-    @if(ViewBag.NextPageNum != null)
-    {
-        <div class="page_nums_block">
-            @if (ViewBag.PrevPage > 0)
-            {
-                <a href="~/Home/Index/@ViewBag.PrevPage" class="page_control_butt"><i class="fas fa-arrow-left"></i></a>
-            }
+    
+    <div class="page_nums_block">
+        @if (ViewBag.PrevPage != null)
+        {
+            <a href="~/Home/Index/@ViewBag.PrevPage" class="page_control_butt"><i class="fas fa-arrow-left"></i></a>
+        }
+        @if (ViewBag.NextPageNum != null)
+        {
             <a href="~/Home/Index/@ViewBag.NextPageNum" class="page_control_butt"><i class="fas fa-arrow-right"></i></a>
-        </div>
-    }
+        }
+            
+    </div>
+    
     
 </div>
