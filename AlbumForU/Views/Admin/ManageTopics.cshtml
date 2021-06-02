@@ -3,15 +3,16 @@
 }
 @using AlbumForU.Models
 @model List<Topic>
-<div class="alert-danger">
-    @Html.ValidationSummary()
-</div>
+
 @if (TempData["Success"] != null)
 {
     <div class="alert-success">
         <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
     </div>
 }
+<div class="alert-danger">
+    @Html.ValidationSummary()
+</div>
 <div class="card">
     <form method="post">
         <div class="form-group">

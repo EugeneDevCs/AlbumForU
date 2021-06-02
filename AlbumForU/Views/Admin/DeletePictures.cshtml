@@ -4,6 +4,9 @@
 @using AlbumForU.Models
 @model Picture
 <div class="card">
+    <div class="alert-danger">
+        @Html.ValidationSummary()
+    </div>
     <div class="card-header">
         <h3>Delete the picture</h3>
     </div>

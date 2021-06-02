@@ -100,7 +100,7 @@ namespace AlbumForU.Controllers
         [HttpPost]
         public IActionResult ManageTopics(string topicName)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && topicName!= null)
             {
                 List<string> names = (from topic in _topicService.GetTopics().ToList()
                                       select topic.Name).ToList();
@@ -119,8 +119,11 @@ namespace AlbumForU.Controllers
                 TempData["Success"] = $"Topic {topicName} was successfully added!";
                 return Redirect("~/Admin/ManageTopics");
             }
+            List<TopicBusiness> topicBusinesses = _topicService.GetTopics().ToList();
+            var mapperTopic = new MapperConfiguration(cfg => cfg.CreateMap<TopicBusiness, Topic>()).CreateMapper();
+            List<Topic> topics = mapperTopic.Map<IEnumerable<TopicBusiness>, List<Topic>>(topicBusinesses).ToList();
             ModelState.AddModelError("", "Fill in all fields!");
-            return View();
+            return View(topics);
         }
 
         [Route("~/Admin/ManageTopics/Delete/{id}")]
@@ -155,7 +158,7 @@ namespace AlbumForU.Controllers
         [HttpPost]
         public IActionResult EditTopic(Topic topic)
         {
-            if(ModelState.IsValid)
+            if(ModelState.IsValid && topic.Name!=null)
             {
                 TopicBusiness topicBusiness = _topicService.GetCeratainTopic(topic.Id);
                 topicBusiness.Name = topic.Name;

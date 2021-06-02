@@ -4,6 +4,9 @@
 @using AlbumForU.Models
 @model List<AppUser>
 <a class="btn" asp-action="AdminIndex">Back</a>
+<div class="alert-danger">
+    @Html.ValidationSummary()
+</div>
 <div class="users_list">
     <ul>
         @foreach (var user in Model)

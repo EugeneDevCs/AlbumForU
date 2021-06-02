@@ -13,8 +13,7 @@ namespace AlbumForU.Models
 
         [Required]
         [DataType(DataType.Text)]
-        [MinLength(2)]
-        [MaxLength(80)]
+        [RegularExpression(@"^[A-Za-z]", ErrorMessage = "Bad tittle, try again")]
         public string Name { get; set; }
     }
 }

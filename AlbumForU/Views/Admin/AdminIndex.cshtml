@@ -8,7 +8,9 @@
         <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
     </div>
 }
-
+<div class="alert-danger">
+    @Html.ValidationSummary()
+</div>
 @if (User.IsInRole("admin"))
 { 
     <a class="btn btn-primary" asp-action="AppointSmn">Appoint someone to role</a>
