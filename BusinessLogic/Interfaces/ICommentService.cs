@@ -11,6 +11,7 @@ namespace BusinessLogic.Interfaces
         void AddAComment(DateTime dt, string UserId, string textBody, string pictureId);
         CommentBusiness FindComment(string id);
         void DeleteComment(string id);
+        void Dispose();
 
     }
 }

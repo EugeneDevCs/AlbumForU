@@ -79,5 +79,9 @@ namespace BusinessLogic.Services
             dbAccess.Comments.Delete(id);
             dbAccess.Save();
         }
+        public void Dispose()
+        {
+            dbAccess.Dispose();
+        }
     }
 }

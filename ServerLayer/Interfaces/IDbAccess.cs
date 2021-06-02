@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ServerLayer.Interfaces
 {
-    public interface IDbAccess
+    public interface IDbAccess:IDisposable
     {
         //entry points to obtain data
         IRepository<AppUser> Users { get;  }

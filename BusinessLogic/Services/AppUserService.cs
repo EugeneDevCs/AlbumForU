@@ -34,5 +34,10 @@ namespace BusinessLogic.Services
             AppUserBusiness appUser= mappedData.Map<AppUser, AppUserBusiness>(dbAccess.Users.Get(id));
             return appUser;
         }
+
+        public void Dispose()
+        {
+            dbAccess.Dispose();
+        }
     }
 }

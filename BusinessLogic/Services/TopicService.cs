@@ -35,19 +35,17 @@ namespace BusinessLogic.Services
         {
             
             IEnumerable<Picture> delPicture = dbAccess.Pictures.Find(th => th.TopicId == id);
-            //using(PictureService pictureService = new PictureService(dbAccess))
-            //{
-            //    foreach (var pic in delPicture)
-            //    {
-            //        pictureService.Delete(pic.Id, webrootPath);
-            //    }
-            //}
+            PictureService pictureService = new PictureService(dbAccess);
+            foreach (var pic in delPicture)
+            {
+                pictureService.DeleteWhithoutSaving(pic.Id, webrootPath);
+            }        
             
-            
-
             dbAccess.Topics.Delete(id);
 
             dbAccess.Save();
+
+            pictureService.Dispose();
         }
 
         public void Create(string name)
@@ -66,6 +64,10 @@ namespace BusinessLogic.Services
                 dbAccess.Save();
             }
                         
+        }
+        public void Dispose()
+        {
+            dbAccess.Dispose();
         }
     }
 }

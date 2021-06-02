@@ -18,5 +18,6 @@ namespace BusinessLogic.Interfaces
         IEnumerable<ThumbnailBusiness> GetUserThumbs(string userId);
         Task AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID);
         void Update(PictureBusiness picture);
+        void Dispose();
     }
 }

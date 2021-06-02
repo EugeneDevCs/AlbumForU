@@ -112,5 +112,39 @@ namespace ServerLayer.Repositories
         {
             _appData.SaveChanges();
         }
+
+
+        //These property and methods will help
+        //to close data streams
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            //if not disposed already
+            if (!this.disposed)
+            {
+                //and disposing is required
+                if (disposing)
+                {
+                    //dispose stream
+                    _appData.Dispose();
+                }
+                //and mark as DISPOSED
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            //invoke dispose method without parameters
+            //which invoke first method
+            Dispose(true);
+
+            //this is an important method
+            //thate tells CLR not to invoke
+            //finilizitaion method for THIS
+            //object
+            GC.SuppressFinalize(this);
+        }
     }
 }

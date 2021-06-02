@@ -69,5 +69,10 @@ namespace BusinessLogic.Services
                 throw new ArgumentNullException("Not enough information");
             }
         }
+
+        public void Dispose()
+        {
+            dbAccess.Dispose();
+        }
     }
 }
