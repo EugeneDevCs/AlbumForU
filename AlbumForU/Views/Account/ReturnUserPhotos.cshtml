@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using AlbumForU.ViewModels
+@model HomeViewModel
+
+<div class="home_body">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    <a class="btn btn-info" asp-area="Identity" asp-page="/Account/Manage/Index">BACK</a>
+    @if (Model.ThumbsFirstColumn.Count() > 0)
+    {
+        <h1>Click to any photo to manage</h1>
+    }
+    else
+    {
+        <h1>You haven`t uploaded any photos yet!</h1>
+    }
+    <div class="pictures_grid">
+        @if (Model.ThumbsFirstColumn.Count() > 0)
+        {
+            <div class="grid_column">
+                @foreach (var pic in Model.ThumbsFirstColumn)
+                {
+                    <a href="~/Account/CertainPicture/@pic.OriginalId" class="thumb_link_contayner">
+                        <div class="thumb_wrapper">
+                            <img src="~/@pic.Path" />
+                        </div>
+                    </a>
+                }
+
+            </div>
+        }
+        @if (Model.ThumbsSecondColumn.Count() > 0)
+        {
+            <div class="grid_column">
+                @foreach (var pic in Model.ThumbsSecondColumn)
+                {
+                    <a href="~/Account/CertainPicture/@pic.OriginalId" class="thumb_link_contayner">
+                        <div class="thumb_wrapper">
+                            <img src="~/@pic.Path" />
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+
+        @if (Model.ThumbsThirdColumn.Count() > 0)
+        {
+            <div class="grid_column">
+                @foreach (var pic in Model.ThumbsThirdColumn)
+                {
+                    <a href="~/Account/CertainPicture/@pic.OriginalId" class="thumb_link_contayner">
+                        <div class="thumb_wrapper">
+                            <img src="~/@pic.Path" />
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+
+    </div>
+
+</div>

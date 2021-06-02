@@ -62,6 +62,11 @@ namespace BusinessLogic.Services
             var mappedData = new MapperConfiguration(config => config.CreateMap<Thumbnail, ThumbnailBusiness>()).CreateMapper();
             return mappedData.Map<IEnumerable<Thumbnail>, List<ThumbnailBusiness>>(((ThumbnailRepository)(dbAccess.Thumbnails)).FindSearch(searchString));
         }
+        public IEnumerable<ThumbnailBusiness> GetUserThumbs(string userId)
+        {
+            var mappedData = new MapperConfiguration(config => config.CreateMap<Thumbnail, ThumbnailBusiness>()).CreateMapper();
+            return mappedData.Map<IEnumerable<Thumbnail>, List<ThumbnailBusiness>>(dbAccess.Thumbnails.Find(th=>th.UserId== userId));
+        }
 
         public async Task AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID)
         {
@@ -146,5 +151,18 @@ namespace BusinessLogic.Services
 
             dbAccess.Save();
         }
+
+        public void Update(PictureBusiness picture)
+        {
+            Picture original = dbAccess.Pictures.Get(picture.Id);
+            if (original.Name != picture.Name)
+            {
+                var mappedData = new MapperConfiguration(config => config.CreateMap<PictureBusiness, Picture>()).CreateMapper();
+                Picture updatePicture = mappedData.Map<PictureBusiness, Picture>(picture);
+                dbAccess.Pictures.Update(updatePicture);
+                dbAccess.Save();
+            }
+        }
+
     }
 }

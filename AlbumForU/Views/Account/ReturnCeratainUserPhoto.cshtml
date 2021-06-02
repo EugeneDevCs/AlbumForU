@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using AlbumForU.Models
+@model Picture
+<div class="card">
+    <a class="btn btn-info" asp-area="Identity" asp-page="/Account/Manage/Index">BACK</a>
+    <div class="card-header">Edit your picture</div>
+    <div class="card-body">
+        <form method="post">
+            <input hidden name="Id" value="@Model.Id" />
+            <div class="form-group">
+                <label>You can change the name of the picture</label>
+                <input name="Name" class="form-control" required value="@Model.Name" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="form-control btn btn-outline-primary">Update</button>
+            </div>
+        </form>
+        <br />
+        <br />
+        <br />
+        <a href="~/Account/CertainPicture/Delete/@Model.Id" class="btn btn-danger">Delete picture</a>
+    </div>
+</div>

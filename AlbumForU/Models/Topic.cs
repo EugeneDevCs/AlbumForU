@@ -8,11 +8,13 @@ namespace AlbumForU.Models
 {
     public class Topic
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public string Id { get; set; }
 
-        [Column(TypeName = "nvarchar(100)")]
+        [Required]
+        [DataType(DataType.Text)]
+        [MinLength(2)]
+        [MaxLength(80)]
         public string Name { get; set; }
     }
 }
