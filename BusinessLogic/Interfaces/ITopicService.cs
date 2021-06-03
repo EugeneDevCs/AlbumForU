@@ -13,6 +13,5 @@ namespace BusinessLogic.Interfaces
         void Create(string name);
         void Delete(string id, string webrootPath);
         void Update(TopicBusiness topic);
-        void Dispose();
     }
 }

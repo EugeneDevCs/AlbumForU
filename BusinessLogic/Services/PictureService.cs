@@ -17,7 +17,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace BusinessLogic.Services
 {
-    public class PictureService : IPictureService,IDisposable
+    public class PictureService : IPictureService
     {
         //this object is to obtain data from server layer
         IDbAccess dbAccess { get; set; }
@@ -89,32 +89,30 @@ namespace BusinessLogic.Services
             string picturePath = directoryPath + "/" + Picture.FileName;
             string picturePaththumb = directoryPathThumb + "/" + Picture.FileName;
 
-            using (var image = Image.Load(Picture.OpenReadStream()))
-            {
-                int imageWidth = image.Width - (image.Width - 500);// now width = 500 px
+            //Saving thumb
+            var image = Image.Load(Picture.OpenReadStream());
+            int imageWidth = image.Width - (image.Width - 500);// now width = 500 px
+            int percents = imageWidth * 100 / image.Width; // now we know how many percents
+                                                           //we should subtract
+            int imageHeight = percents * image.Height / 100;//and now we have the image height
+            image.Mutate(x => x.Resize(imageWidth, imageHeight));
+            image.SaveAsJpeg(webrootPath + "/" + picturePaththumb);
+            //Saving pic
+            var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew);
+            await Picture.CopyToAsync(fileStream);
 
-                int percents = imageWidth * 100 / image.Width; // now we know how many percents
-                                                               //we should subtract
-                int imageHeight = percents * image.Height / 100;//and now we have the image height
-
-                image.Mutate(x => x.Resize(imageWidth, imageHeight));
-                image.SaveAsJpeg(webrootPath + "/" + picturePaththumb);
-            }
-
-            //Saving picture to our file system
-            using (var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew))
-            {
-                await Picture.CopyToAsync(fileStream);
-            }
-
-            //Check if the directory foe thumb exists
-            
-
-            //Saving resized (width = 500px) thumb to our file system
-            
+            //saving to db
             string origId = dbAccess.Pictures.Create(new Picture() { Path = picturePath, Name = PictureName, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
-            string thumbId= dbAccess.Thumbnails.Create(new Thumbnail() { Path = picturePaththumb, OriginalId = origId, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
+            dbAccess.Thumbnails.Create(new Thumbnail() { Path = picturePaththumb, OriginalId = origId, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today });
             dbAccess.Save();
+
+            //disposing
+            fileStream.Dispose();
+            image.Dispose();
+
+
+
+
         }
 
         public void Delete(string id, string webrootPath)
@@ -151,38 +149,7 @@ namespace BusinessLogic.Services
 
             dbAccess.Save();
         }
-        public void DeleteWhithoutSaving(string id, string webrootPath)
-        {
-            Picture delPic = dbAccess.Pictures.Get(id);
-            Thumbnail delThumb = dbAccess.Thumbnails.Find(th => th.OriginalId == id).FirstOrDefault();
-            IEnumerable<Comment> delComments = dbAccess.Comments.Find(th => th.PictureId == id);
-            IEnumerable<Like> delLikes = dbAccess.Likes.Find(lk => lk.PictureId == id);
-
-
-            if (System.IO.File.Exists(webrootPath +"/"+ delPic.Path))
-            {
-                System.IO.File.Delete(webrootPath + "/" + delPic.Path);
-            }
-
-            if (System.IO.File.Exists(webrootPath +"/"+ delThumb.Path))
-            {
-                System.IO.File.Delete(webrootPath + "/" + delThumb.Path);
-            }
-
-            
-
-            foreach (var comment in delComments)
-            {
-                dbAccess.Comments.Delete(comment.Id);
-            }
-            foreach (var like in delLikes)
-            {
-                dbAccess.Likes.Delete(like.Id);
-            }
-
-            dbAccess.Thumbnails.Delete(delThumb.Id);
-            dbAccess.Pictures.Delete(id);
-        }
+        
 
         public void Update(PictureBusiness picture)
         {
@@ -194,10 +161,6 @@ namespace BusinessLogic.Services
                 dbAccess.Pictures.Update(updatePicture);
                 dbAccess.Save();
             }
-        }
-        public void Dispose()
-        {
-            dbAccess.Dispose();
         }
 
     }

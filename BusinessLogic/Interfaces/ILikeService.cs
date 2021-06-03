@@ -11,7 +11,6 @@ namespace BusinessLogic.Interfaces
         void ToLikeDisLike(string userId, string picId);
         bool IsLiked(string userId,string pictureId);
         int CountLikes(string pictureId);
-        void Dispose();
 
     }
 }

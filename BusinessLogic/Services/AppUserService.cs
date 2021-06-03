@@ -35,9 +35,5 @@ namespace BusinessLogic.Services
             return appUser;
         }
 
-        public void Dispose()
-        {
-            dbAccess.Dispose();
-        }
     }
 }

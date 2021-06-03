@@ -13,6 +13,5 @@ namespace BusinessLogic.Interfaces
         IdentityRole AddRole(string name);
         void AppointSomeone(string roleId, string userId);
         void DisappointSomeone(string roleId, string userId);
-        void Dispose();
     }
 }

@@ -55,9 +55,5 @@ namespace BusinessLogic.Services
             }
             dbAccess.Save();
         }
-        public void Dispose()
-        {
-            dbAccess.Dispose();
-        }
     }
 }

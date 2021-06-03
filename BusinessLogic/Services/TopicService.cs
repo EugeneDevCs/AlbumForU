@@ -5,6 +5,7 @@ using ServerLayer.Interfaces;
 using ServerLayer.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BusinessLogic.Services
@@ -35,17 +36,15 @@ namespace BusinessLogic.Services
         {
             
             IEnumerable<Picture> delPicture = dbAccess.Pictures.Find(th => th.TopicId == id);
-            PictureService pictureService = new PictureService(dbAccess);
+            
             foreach (var pic in delPicture)
             {
-                pictureService.DeleteWhithoutSaving(pic.Id, webrootPath);
+                DeleteWhithoutPictureSaving(pic.Id, webrootPath);
             }        
             
             dbAccess.Topics.Delete(id);
 
             dbAccess.Save();
-
-            pictureService.Dispose();
         }
 
         public void Create(string name)
@@ -65,9 +64,40 @@ namespace BusinessLogic.Services
             }
                         
         }
-        public void Dispose()
+
+
+        private void DeleteWhithoutPictureSaving(string id, string webrootPath)
         {
-            dbAccess.Dispose();
+            Picture delPic = dbAccess.Pictures.Get(id);
+            Thumbnail delThumb = dbAccess.Thumbnails.Find(th => th.OriginalId == id).FirstOrDefault();
+            IEnumerable<Comment> delComments = dbAccess.Comments.Find(th => th.PictureId == id);
+            IEnumerable<Like> delLikes = dbAccess.Likes.Find(lk => lk.PictureId == id);
+
+
+            if (System.IO.File.Exists(webrootPath + "/" + delPic.Path))
+            {
+                System.IO.File.Delete(webrootPath + "/" + delPic.Path);
+            }
+
+            if (System.IO.File.Exists(webrootPath + "/" + delThumb.Path))
+            {
+                System.IO.File.Delete(webrootPath + "/" + delThumb.Path);
+            }
+
+
+
+            foreach (var comment in delComments)
+            {
+                dbAccess.Comments.Delete(comment.Id);
+            }
+            foreach (var like in delLikes)
+            {
+                dbAccess.Likes.Delete(like.Id);
+            }
+
+            dbAccess.Thumbnails.Delete(delThumb.Id);
+            dbAccess.Pictures.Delete(id);
         }
+
     }
 }

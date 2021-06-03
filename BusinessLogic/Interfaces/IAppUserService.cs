@@ -9,7 +9,6 @@ namespace BusinessLogic.Interfaces
     {
         IEnumerable<AppUserBusiness> GetAppUsers();
         AppUserBusiness GetUser(string id);
-        void Dispose();
 
     }
 }
