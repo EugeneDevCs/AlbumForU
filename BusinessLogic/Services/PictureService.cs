@@ -68,7 +68,7 @@ namespace BusinessLogic.Services
             return mappedData.Map<IEnumerable<Thumbnail>, List<ThumbnailBusiness>>(dbAccess.Thumbnails.Find(th=>th.UserId== userId));
         }
 
-        public async Task AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID)
+        public void AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID)
         {
             var mappedData = new MapperConfiguration(config => config.CreateMap<Topic, TopicBusiness>()).CreateMapper();
             string topicName = mappedData.Map<Topic, TopicBusiness>((dbAccess.Topics.Get(TopicId))).Name;
@@ -98,17 +98,17 @@ namespace BusinessLogic.Services
             image.Mutate(x => x.Resize(imageWidth, imageHeight));
             image.SaveAsJpeg(webrootPath + "/" + picturePaththumb);
             //Saving pic
-            var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew);
-            await Picture.CopyToAsync(fileStream);
+            using (var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew))
+            {
+                Picture.CopyToAsync(fileStream);
 
-            //saving to db
+            }
             string origId = dbAccess.Pictures.Create(new Picture() { Path = picturePath, Name = PictureName, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
             dbAccess.Thumbnails.Create(new Thumbnail() { Path = picturePaththumb, OriginalId = origId, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today });
             dbAccess.Save();
 
+
             //disposing
-            fileStream.Dispose();
-            image.Dispose();
 
 
 
