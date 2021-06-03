@@ -104,7 +104,7 @@ namespace BusinessLogic.Services
             //Saving picture to our file system
             using (var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew))
             {
-                Picture.CopyToAsync(fileStream);
+                Picture.CopyTo(fileStream);
             }
 
             //Check if the directory foe thumb exists

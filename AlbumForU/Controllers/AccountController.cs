@@ -101,5 +101,30 @@ namespace AlbumForU.Controllers
 
             return Redirect("~/Account/Index");
         }
+
+        [Route("~/Account/ManageComments/{userId}")]
+        public ActionResult ReturnUserComments(string userId)
+        {
+            List<CommentBusiness> commentBusinessList = _commentService.FindUsersComments(userId);
+            var mapperComments = new MapperConfiguration(cfg => cfg.CreateMap<CommentBusiness, Comment>()).CreateMapper();
+            List<Comment> Comments = mapperComments.Map<List<CommentBusiness>, List<Comment>>(commentBusinessList);
+
+            return View(Comments);
+        }
+        [Route("~/Account/ManageComments/Delete/{commentId}")]
+        public ActionResult DeleteUserComments(string commentId)
+        {
+            if(commentId!=null)
+            {
+                _commentService.DeleteComment(commentId);
+                TempData["Success"] = $"Picture was successfully uploaded!";
+            }
+            else
+            {
+                ModelState.AddModelError("", "Can`t delete this comment at the moment");
+            }
+            return Redirect("~/Account/ManageComments/" + this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        }
+
     }
 }

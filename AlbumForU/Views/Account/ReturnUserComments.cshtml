@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using AlbumForU.Models
+@model List<Comment>
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">
+        <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+    </div>
+}
+
+<div class="alert-danger">
+    @Html.ValidationSummary()
+</div>
+<div class="card">
+    <a id="manage" class="btn btn-primary" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Back</a>
+    <div class="card-header">
+        <h2>Here you can delete any of your comments</h2>
+    </div>
+    <div class="card-body">
+        <ul class="list-gtoup"></ul>
+        @foreach (var comment in Model)
+        {
+            <div class="list-group-item">
+                <h3 class="list-group-item-secondary">@comment.dateTime.ToShortDateString()</h3>
+                <div>@comment.TextBody</div>
+                <a href="~/Account/ManageComments/Delete/@comment.Id" class="btn btn-danger">Delete</a>
+            </div>
+        }
+    </div>
+</div>

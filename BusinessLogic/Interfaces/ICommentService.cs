@@ -10,6 +10,7 @@ namespace BusinessLogic.Interfaces
         IEnumerable<CommentBusiness> GetComments(string pictureId);
         void AddAComment(DateTime dt, string UserId, string textBody, string pictureId);
         CommentBusiness FindComment(string id);
+        List<CommentBusiness> FindUsersComments(string userid);
         void DeleteComment(string id);
         void Dispose();
 

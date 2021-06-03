@@ -68,6 +68,18 @@ namespace BusinessLogic.Services
                 UserId = comment.UserId
             };
         }
+        
+        public List<CommentBusiness> FindUsersComments(string userid)
+        {
+            if(userid == null)
+            {
+                throw new ArgumentNullException("Id is empty!");
+            }
+            var mappedData = new MapperConfiguration(config => config.CreateMap<Comment, CommentBusiness>()).CreateMapper();
+            return mappedData.Map<IEnumerable<Comment>, List<CommentBusiness>>(dbAccess.Comments.Find(c => c.UserId == userid));
+
+            
+        }
 
         public void DeleteComment(string id)
         {
