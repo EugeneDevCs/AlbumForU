@@ -5,6 +5,7 @@ using ServerLayer.Interfaces;
 using ServerLayer.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace BusinessLogic.Services
@@ -35,17 +36,30 @@ namespace BusinessLogic.Services
         {
             
             IEnumerable<Picture> delPicture = dbAccess.Pictures.Find(th => th.TopicId == id);
-            PictureService pictureService = new PictureService(dbAccess);
+            IEnumerable<Thumbnail> delThumbs = dbAccess.Thumbnails.Find(th => th.TopicId == id);
+            string topicName = dbAccess.Topics.Get(id).Name;
+            string directoryPath = "pictures/originals/" + topicName;
+            string directoryPathThumb = "pictures/thumbs/" + topicName;
+            if (Directory.Exists(webrootPath + "/" + directoryPath))
+            {
+                Directory.Delete(webrootPath + "/" + directoryPath,true);
+            }
+            if (Directory.Exists(webrootPath + "/" + directoryPathThumb))
+            {
+                Directory.Delete(webrootPath + "/" + directoryPathThumb, true);
+            }            
             foreach (var pic in delPicture)
             {
-                pictureService.DeleteWhithoutSaving(pic.Id, webrootPath);
+                dbAccess.Pictures.Delete(pic.Id);
+            }   
+            foreach (var thumb in delThumbs)
+            {
+                dbAccess.Thumbnails.Delete(thumb.Id);
             }        
             
             dbAccess.Topics.Delete(id);
 
             dbAccess.Save();
-
-            pictureService.Dispose();
         }
 
         public void Create(string name)

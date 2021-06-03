@@ -16,7 +16,7 @@ namespace BusinessLogic.Interfaces
         void Delete(string id, string webrootPath);
         IEnumerable<ThumbnailBusiness> GetSearchedThumbs(string searchString);
         IEnumerable<ThumbnailBusiness> GetUserThumbs(string userId);
-        Task AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID);
+        void AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID);
         void Update(PictureBusiness picture);
         void Dispose();
     }

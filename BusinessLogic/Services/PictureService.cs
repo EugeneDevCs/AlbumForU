@@ -68,7 +68,7 @@ namespace BusinessLogic.Services
             return mappedData.Map<IEnumerable<Thumbnail>, List<ThumbnailBusiness>>(dbAccess.Thumbnails.Find(th=>th.UserId== userId));
         }
 
-        public async Task AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID)
+        public void AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID)
         {
             var mappedData = new MapperConfiguration(config => config.CreateMap<Topic, TopicBusiness>()).CreateMapper();
             string topicName = mappedData.Map<Topic, TopicBusiness>((dbAccess.Topics.Get(TopicId))).Name;
@@ -104,7 +104,7 @@ namespace BusinessLogic.Services
             //Saving picture to our file system
             using (var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew))
             {
-                await Picture.CopyToAsync(fileStream);
+                Picture.CopyToAsync(fileStream);
             }
 
             //Check if the directory foe thumb exists
@@ -150,39 +150,7 @@ namespace BusinessLogic.Services
             dbAccess.Pictures.Delete(id);
 
             dbAccess.Save();
-        }
-        public void DeleteWhithoutSaving(string id, string webrootPath)
-        {
-            Picture delPic = dbAccess.Pictures.Get(id);
-            Thumbnail delThumb = dbAccess.Thumbnails.Find(th => th.OriginalId == id).FirstOrDefault();
-            IEnumerable<Comment> delComments = dbAccess.Comments.Find(th => th.PictureId == id);
-            IEnumerable<Like> delLikes = dbAccess.Likes.Find(lk => lk.PictureId == id);
-
-
-            if (System.IO.File.Exists(webrootPath +"/"+ delPic.Path))
-            {
-                System.IO.File.Delete(webrootPath + "/" + delPic.Path);
-            }
-
-            if (System.IO.File.Exists(webrootPath +"/"+ delThumb.Path))
-            {
-                System.IO.File.Delete(webrootPath + "/" + delThumb.Path);
-            }
-
-            
-
-            foreach (var comment in delComments)
-            {
-                dbAccess.Comments.Delete(comment.Id);
-            }
-            foreach (var like in delLikes)
-            {
-                dbAccess.Likes.Delete(like.Id);
-            }
-
-            dbAccess.Thumbnails.Delete(delThumb.Id);
-            dbAccess.Pictures.Delete(id);
-        }
+        }        
 
         public void Update(PictureBusiness picture)
         {
