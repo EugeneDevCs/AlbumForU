@@ -125,35 +125,44 @@ namespace AlbumForU.Controllers
         [Route("Home/Search")]
         public IActionResult Search(string request_text)
         {
-            HomeViewModel viewModel = new HomeViewModel();
+            if(request_text!=null)
+            {
+                HomeViewModel viewModel = new HomeViewModel();
 
 
-            List<ThumbnailBusiness> thumbnailBusinesses = _pictureService.GetSearchedThumbs(request_text).ToList();
-            var mapperThumbs = new MapperConfiguration(cfg => cfg.CreateMap<ThumbnailBusiness, Thumbnail>()).CreateMapper();
-            List<Thumbnail> thumbnails = mapperThumbs.Map<IEnumerable<ThumbnailBusiness>, List<Thumbnail>>(thumbnailBusinesses);
+                List<ThumbnailBusiness> thumbnailBusinesses = _pictureService.GetSearchedThumbs(request_text).ToList();
+                var mapperThumbs = new MapperConfiguration(cfg => cfg.CreateMap<ThumbnailBusiness, Thumbnail>()).CreateMapper();
+                List<Thumbnail> thumbnails = mapperThumbs.Map<IEnumerable<ThumbnailBusiness>, List<Thumbnail>>(thumbnailBusinesses);
 
-            List<TopicBusiness> topicBusinesses = _topicService.GetTopics().ToList();
-            var mapperTopics = new MapperConfiguration(cfg => cfg.CreateMap<TopicBusiness, Topic>()).CreateMapper();
-            viewModel.Topics = mapperTopics.Map<IEnumerable<TopicBusiness>, List<Topic>>(topicBusinesses);
+                List<TopicBusiness> topicBusinesses = _topicService.GetTopics().ToList();
+                var mapperTopics = new MapperConfiguration(cfg => cfg.CreateMap<TopicBusiness, Topic>()).CreateMapper();
+                viewModel.Topics = mapperTopics.Map<IEnumerable<TopicBusiness>, List<Topic>>(topicBusinesses);
 
-            int volume = thumbnails.Count()/3;
-            int remainder = thumbnails.Count() % 3;
+                int volume = thumbnails.Count() / 3;
+                int remainder = thumbnails.Count() % 3;
+
+
+                viewModel.ThumbsFirstColumn = (from thumb in thumbnails
+                                               .ToList().Where((s, i) => i < volume)
+                                               select thumb).ToList();
+
+
+                viewModel.ThumbsSecondColumn = (from thumb in thumbnails
+                                                .ToList().Where((s, i) => i >= volume && i < volume * 2)
+                                                select thumb).ToList();
+
+                viewModel.ThumbsThirdColumn = (from thumb in thumbnails
+                                               .ToList().Where((s, i) => i >= volume * 2 && i < volume * 3 + remainder)
+                                               select thumb).ToList();
+
+                return View(viewModel);
+            }
+            else
+            {
+                TempData["Failure"]= "There must be some text in serch request!";
+                return RedirectToAction("Index");
+            }
             
-
-            viewModel.ThumbsFirstColumn = (from thumb in thumbnails
-                                           .ToList().Where((s, i) => i < volume)
-                                           select thumb).ToList();
-
-
-            viewModel.ThumbsSecondColumn = (from thumb in thumbnails
-                                            .ToList().Where((s, i) => i >= volume && i < volume*2)
-                                            select thumb).ToList();
-
-            viewModel.ThumbsThirdColumn = (from thumb in thumbnails
-                                           .ToList().Where((s, i) => i >= volume * 2 && i < volume * 3 + remainder)
-                                           select thumb).ToList();
-            
-            return View(viewModel);
         }
         public IActionResult Privacy()
         {

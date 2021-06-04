@@ -24,6 +24,9 @@ namespace AlbumForU.Areas.Identity.Pages.Account.Manage
         }
 
         public string Username { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+        public string Nickname { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -42,8 +45,13 @@ namespace AlbumForU.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
+            var firstName = user.Firstname;
+            var lastName = user.Lastname;
+            var nickname = user.Nickname;
+            Lastname = lastName;
+            Firstname = firstName;
             Username = userName;
+            Nickname = nickname;
 
             Input = new InputModel
             {

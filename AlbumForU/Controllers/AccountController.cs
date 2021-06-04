@@ -126,5 +126,6 @@ namespace AlbumForU.Controllers
             return Redirect("~/Account/ManageComments/" + this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
 
+
     }
 }

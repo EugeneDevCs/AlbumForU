@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BusinessLogic.BusinessModels;
+using BusinessLogic.AdditionalFunctional;
 using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Http;
 using ServerLayer.DataObtaining;
@@ -80,6 +81,7 @@ namespace BusinessLogic.Services
                 Directory.CreateDirectory(webrootPath + "/" + directoryPath);
             }
 
+            //Check if the directory for thumb exists
             string directoryPathThumb = "pictures/thumbs/" + topicName;
             if (!Directory.Exists(webrootPath + "/" + directoryPathThumb))
             {
@@ -88,33 +90,54 @@ namespace BusinessLogic.Services
 
             string picturePath = directoryPath + "/" + Picture.FileName;
             string picturePaththumb = directoryPathThumb + "/" + Picture.FileName;
-
-            using (var image = Image.Load(Picture.OpenReadStream()))
+            //Saving resized (width = 500px) thumb to our file system
+            try
             {
-                int imageWidth = image.Width - (image.Width - 500);// now width = 500 px
+                using (var image = Image.Load(Picture.OpenReadStream()))
+                {
+                    int imageWidth = image.Width - (image.Width - 500);// now width = 500 px
 
-                int percents = imageWidth * 100 / image.Width; // now we know how many percents
-                                                               //we should subtract
-                int imageHeight = percents * image.Height / 100;//and now we have the image height
+                    int percents = imageWidth * 100 / image.Width; // now we know how many percents
+                                                                   //we should subtract
+                    int imageHeight = percents * image.Height / 100;//and now we have the image height
 
-                image.Mutate(x => x.Resize(imageWidth, imageHeight));
-                image.SaveAsJpeg(webrootPath + "/" + picturePaththumb);
+                    image.Mutate(x => x.Resize(imageWidth, imageHeight));
+                    image.SaveAsJpeg(webrootPath + "/" + picturePaththumb);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ThumbnailSavingException($"Thumnail wasn`t saved! Error is {ex.Message}");
             }
 
             //Saving picture to our file system
-            using (var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew))
+            try
             {
-                Picture.CopyTo(fileStream);
+                using (var fileStream = new FileStream(webrootPath + "/" + picturePath, FileMode.CreateNew))
+                {
+                    Picture.CopyTo(fileStream);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new PictureSavingException($"Picture wasn`t saved! Error is {ex.Message}"); 
             }
 
-            //Check if the directory foe thumb exists
-            
-
-            //Saving resized (width = 500px) thumb to our file system
-            
-            string origId = dbAccess.Pictures.Create(new Picture() { Path = picturePath, Name = PictureName, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
-            string thumbId= dbAccess.Thumbnails.Create(new Thumbnail() { Path = picturePaththumb, OriginalId = origId, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
+            //Saving picture to DB
+            //Saving resized (width = 500px) thumb to DB
+            try
+            {
+                string origId = dbAccess.Pictures.Create(new Picture() { Path = picturePath, Name = PictureName, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
+                string thumbId = dbAccess.Thumbnails.Create(new Thumbnail() { Path = picturePaththumb, OriginalId = origId, TopicId = TopicId, UserId = currentUserID, Date = DateTime.Today }).Id;
+            }
+            catch (Exception ex)
+            {                
+                throw new ErrorWhilwSavingToDBException($"Error while saving to DB! Error is {ex.Message}");                
+            }          
+                        
             dbAccess.Save();
+
+
         }
 
         public void Delete(string id, string webrootPath)

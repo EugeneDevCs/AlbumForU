@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using BusinessLogic.Interfaces;
+using BusinessLogic.AdditionalFunctional;
 using BusinessLogic.BusinessModels;
 using AutoMapper;
 using AlbumForU.Models;
@@ -57,14 +58,28 @@ namespace AlbumForU.Controllers
             if (ModelState.IsValid && viewModel.Picture != null)
             {
                 string currentUserID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-                _pictureService.AddPicture(
+                try
+                {
+                    _pictureService.AddPicture(
                     viewModel.PictureName,
                     viewModel.TopicId,
                     viewModel.Picture,
                     _appEnvironment.WebRootPath,
                     currentUserID);
-                TempData["Success"] = $"Picture was successfully uploaded!";
+                    TempData["Success"] = $"Picture was successfully uploaded!";
+                }
+                catch (ThumbnailSavingException ex)
+                {
+                    TempData["Failure"] = ex.Message;
+                }
+                catch (PictureSavingException ex)
+                {
+                    TempData["Failure"] = ex.Message;
+                }
+                catch (ErrorWhilwSavingToDBException ex)
+                {
+                    TempData["Failure"] = ex.Message;
+                }                
                 return Redirect("/Home/Index");
             }
             List<TopicBusiness> topicBusinesses = _topicService.GetTopics().ToList();
@@ -109,14 +124,32 @@ namespace AlbumForU.Controllers
         [Route("Picture/AddAComment")]
         public IActionResult AddAComment(string commentBody)
         {
-            if (ModelState.IsValid && commentBody.Length > 0)
+            if (ModelState.IsValid && commentBody != null)
             {
-                _commentService.AddAComment(
-                    DateTime.Today,
-                    this.User.FindFirst(ClaimTypes.NameIdentifier).Value,
-                    commentBody,
-                    TempData["originalId"].ToString());               
+                try
+                {
+                    _commentService.AddAComment(
+                        DateTime.Today,
+                        this.User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                        commentBody,
+                        TempData["originalId"].ToString()
+                    );
 
+                    TempData["Success"] = $"Picture was successfully uploaded!";
+                }
+                catch(ArgumentNullException ex)
+                {
+                    TempData["Failure"] = ex.Message;
+                }
+                catch (Exception ex)
+                {
+                    TempData["Failure"] = ex.Message;
+                }
+
+            }
+            else
+            {
+                TempData["Failure"] = "Fill in all fields!";
             }
             return Redirect("CertainPicture/" + TempData["originalId"]);
         }
@@ -128,15 +161,6 @@ namespace AlbumForU.Controllers
             _likeService.ToLikeDisLike(userId, pictId);
             return Redirect("~/Picture/CertainPicture/" + pictId);
         }
-        
-        [Route("Picture/Delete/{pictId}")]
-        public IActionResult Delete(string pictId)
-        {
-            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            _likeService.ToLikeDisLike(userId, pictId);
-            return Redirect("~/Picture/CertainPicture/" + pictId);
-        }
-
 
     }
 }

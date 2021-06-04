@@ -13,7 +13,7 @@ namespace AlbumForU.Models
 
         [Required]
         [DataType(DataType.Text)]
-        [RegularExpression(@"^[A-Za-z]", ErrorMessage = "Bad tittle, try again")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "May contain only letters!")]
         public string Name { get; set; }
     }
 }

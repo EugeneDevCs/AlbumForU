@@ -12,6 +12,10 @@ namespace AlbumForU.Models
 
         public string UserId { get; set; }
         public string UserNick { get; set; }
+
+        [DataType(DataType.Text)]
+        [Required(ErrorMessage = "Comment cannot be empty!")]
+        [StringLength(500, ErrorMessage = "Comment cannot be longer than 500 characters.")]
         public string TextBody { get; set; }
         public string PictureId { get; set; }
         public DateTime dateTime { get; set; }

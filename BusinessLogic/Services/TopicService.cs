@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLogic.AdditionalFunctional;
 using BusinessLogic.BusinessModels;
 using BusinessLogic.Interfaces;
 using ServerLayer.Interfaces;
@@ -6,6 +7,7 @@ using ServerLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace BusinessLogic.Services
@@ -64,20 +66,41 @@ namespace BusinessLogic.Services
 
         public void Create(string name)
         {
+            List<string> names = (from topic in dbAccess.Topics.GetAll().ToList()
+                                  select topic.Name).ToList();
+            if (names.Count > 0)
+            {
+                foreach (var topicName in names)
+                {
+                    if (topicName == name)
+                    {
+                        throw new TopicAlreadyExistException($"Topic {name} is already exist!");
+                    }
+                }
+            }
             dbAccess.Topics.Create(new Topic { Name = name });
             dbAccess.Save();
         }
         public void Update(TopicBusiness topic)
         {
-            Topic original =dbAccess.Topics.Get(topic.Id);
-            if(original.Name!=topic.Name)
+            List<string> names = (from tpc in dbAccess.Topics.GetAll().ToList()
+                                  select tpc.Name).ToList();
+            if (names.Count > 0)
             {
-                var mappedData = new MapperConfiguration(config => config.CreateMap<TopicBusiness, Topic>()).CreateMapper();
-                Topic updateTopic = mappedData.Map<TopicBusiness, Topic>(topic);
-                dbAccess.Topics.Update(updateTopic);
-                dbAccess.Save();
+                foreach (var topicName in names)
+                {
+                    if (topicName == topic.Name)
+                    {
+                        throw new TopicAlreadyExistException($"Topic {topic.Name} is already exist!");
+                    }
+                }
             }
-                        
+            Topic original = dbAccess.Topics.Get(topic.Id);
+            var mappedData = new MapperConfiguration(config => config.CreateMap<TopicBusiness, Topic>()).CreateMapper();
+            Topic updateTopic = mappedData.Map<TopicBusiness, Topic>(topic);
+            dbAccess.Topics.Update(updateTopic);
+            dbAccess.Save();
+
         }
         public void Dispose()
         {

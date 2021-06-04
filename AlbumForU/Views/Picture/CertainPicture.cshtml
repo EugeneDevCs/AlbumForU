@@ -4,9 +4,21 @@
 @using AlbumForU.ViewModels
 @model PictureViewModel
 <div class="certaine_picture_page">
-    @if (User.IsInRole("admin")||User.IsInRole("manager"))
+    @if (User.IsInRole("admin") || User.IsInRole("manager"))
     {
         <a class="btn btn-danger" href="~/Admin/DeletePictures/@Model.Picture.Id">Delete picture</a>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-success">
+            <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
+        </div>
+    }
+    @if (TempData["Failure"] != null)
+    {
+        <div class="alert-danger">
+            <p><strong>Failure:</strong> @TempData["Failure"].ToString()</p>
+        </div>
     }
     <div class="card">
         <div class="picture_orig_contayner">
@@ -50,18 +62,18 @@
                 <div class="comments_list">
                     @foreach (var comment in Model.Comments)
                     {
-                    <div class="comment_contayner">
-                        <div class="comment_avatar"><i class="fas fa-user-astronaut"></i></div>
-                        <div class="comment_body">
-                            <strong>@comment.UserNick</strong>
-                            <div class="comment_date">@comment.dateTime.ToShortDateString()</div>
-                            <div class="text-body">@comment.TextBody</div>
+                        <div class="comment_contayner">
+                            <div class="comment_avatar"><i class="fas fa-user-astronaut"></i></div>
+                            <div class="comment_body">
+                                <strong>@comment.UserNick</strong>
+                                <div class="comment_date">@comment.dateTime.ToShortDateString()</div>
+                                <div class="text-body">@comment.TextBody</div>
+                            </div>
+                            @if (User.IsInRole("admin") || User.IsInRole("manager"))
+                            {
+                                <a class="btn btn-danger" href="~/Admin/DeleteComment?id=@comment.Id&pictId=@Model.Picture.Id">Delete comment</a>
+                            }
                         </div>
-                        @if (User.IsInRole("admin") || User.IsInRole("manager"))
-                        {
-                            <a class="btn btn-danger" href="~/Admin/DeleteComment?id=@comment.Id&pictId=@Model.Picture.Id">Delete comment</a>
-                        }
-                    </div>
                     }
                 </div>
             }

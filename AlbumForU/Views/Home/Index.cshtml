@@ -11,10 +11,19 @@
             <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
         </div>
     }
+    @if (TempData["Failure"] != null)
+    {
+        <div class="alert-danger">
+            <p><strong>Failure:</strong> @TempData["Failure"].ToString()</p>
+        </div>
+    }
+    <div class="alert-danger">
+        @Html.ValidationSummary()
+    </div>
     <h1>Hello there!</h1>
     <div class="search_contayner">
         <form asp-action="Search" class="search_form" method="post">
-            <input name="request_text" class="form-control" placeholder="Search"/>
+            <input name="request_text" class="form-control" placeholder="Search" required  minlength="2" maxlength="50"/>
             <button class="form-control" type="submit">Go</button>
         </form>
     </div>

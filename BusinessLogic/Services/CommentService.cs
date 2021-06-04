@@ -27,21 +27,29 @@ namespace BusinessLogic.Services
 
         public void AddAComment(DateTime dt, string UserId, string textBody, string pictureId)
         {
-            if(textBody == null)
+            if (textBody == null)
             {
                 throw new ArgumentNullException("Comment is empty!");
             }
             string usernik = dbAccess.Users.Get(UserId).Nickname;
-            Comment comment = new Comment() { 
+            Comment comment = new Comment()
+            {
                 dateTime = dt,
                 UserId = UserId,
                 UserNick = usernik,
-                PictureId=pictureId,
-                TextBody=textBody
+                PictureId = pictureId,
+                TextBody = textBody
             };
-
-            dbAccess.Comments.Create(comment);
-            dbAccess.Save();
+            try
+            {
+                dbAccess.Comments.Create(comment);
+                dbAccess.Save();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
 
         }
 

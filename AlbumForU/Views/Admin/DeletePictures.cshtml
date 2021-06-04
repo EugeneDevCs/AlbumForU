@@ -2,18 +2,19 @@
     Layout = "~/Views/Admin/_Admin_Layout.cshtml";
 }
 @using AlbumForU.Models
-@model Picture
+@model string
 <div class="card">
     <div class="alert-danger">
         @Html.ValidationSummary()
     </div>
+    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Back</a>
     <div class="card-header">
-        <h3>Delete the picture</h3>
+        <h3>Delete your profile</h3>
     </div>
     <div class="card-body">
-        <h3>Are you sure? All comments will be deleted too!</h3>
+        <h3>Are you sure? You won`t have an opportunity to access your photos and they will be deleted!</h3>
         <br />
         <br />
-        <a href="~/Admin/DeletePictures/Agree/@Model.Id" class="btn btn-danger">DELETE</a>
+        <a href="~/Admin/DeletePictures/Agree/@Model" class="btn btn-danger">DELETE</a>
     </div>
 </div>

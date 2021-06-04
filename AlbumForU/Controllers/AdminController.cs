@@ -12,6 +12,7 @@ using BusinessLogic.Interfaces;
 using BusinessLogic.BusinessModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
+using BusinessLogic.AdditionalFunctional;
 
 namespace AlbumForU.Controllers
 {
@@ -102,27 +103,23 @@ namespace AlbumForU.Controllers
         {
             if (ModelState.IsValid && topicName!= null)
             {
-                List<string> names = (from topic in _topicService.GetTopics().ToList()
-                                      select topic.Name).ToList();
-                if (names.Count() > 0)
+                try
                 {
-                    foreach (var name in names)
-                    {
-                        if (name == topicName)
-                        {
-                            ModelState.AddModelError("", "This topic is alredy exist!");
-                            return View();
-                        }
-                    }
+                    _topicService.Create(topicName);
+                    TempData["Success"] = $"Topic {topicName} was successfully added!";
                 }
-                _topicService.Create(topicName);
-                TempData["Success"] = $"Topic {topicName} was successfully added!";
-                return Redirect("~/Admin/ManageTopics");
+                catch(TopicAlreadyExistException ex)
+                {
+                    ModelState.AddModelError("", ex.Message);             
+                }
             }
-            List<TopicBusiness> topicBusinesses = _topicService.GetTopics().ToList();
+            else
+            {
+                ModelState.AddModelError("", "Fill in all fields!");
+            }
             var mapperTopic = new MapperConfiguration(cfg => cfg.CreateMap<TopicBusiness, Topic>()).CreateMapper();
+            List<TopicBusiness> topicBusinesses = _topicService.GetTopics().ToList();            
             List<Topic> topics = mapperTopic.Map<IEnumerable<TopicBusiness>, List<Topic>>(topicBusinesses).ToList();
-            ModelState.AddModelError("", "Fill in all fields!");
             return View(topics);
         }
 
@@ -160,13 +157,24 @@ namespace AlbumForU.Controllers
         {
             if(ModelState.IsValid && topic.Name!=null)
             {
-                TopicBusiness topicBusiness = _topicService.GetCeratainTopic(topic.Id);
-                topicBusiness.Name = topic.Name;
-                _topicService.Update(topicBusiness);
-                return Redirect("~/Admin/ManageTopics");
+                try
+                {
+                    TopicBusiness topicBusiness = _topicService.GetCeratainTopic(topic.Id);
+                    topicBusiness.Name = topic.Name;
+                    _topicService.Update(topicBusiness);
+                }
+                catch (TopicAlreadyExistException ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
             }
-            ModelState.AddModelError("", "Something wrong!");
-            return View(topic);
+            else
+            {
+
+                ModelState.AddModelError("", "Fill in only correct values!");
+                return View(topic);
+            }
+            return Redirect("~/Admin/ManageTopics");
         }
 
         [Route("~/Admin/DeletePictures/{id}")]
