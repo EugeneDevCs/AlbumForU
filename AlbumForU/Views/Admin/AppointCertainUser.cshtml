@@ -12,21 +12,29 @@
         <form method="post">
             <div class="form-group">
                 <label>User`s ID</label>
-                <input readonly asp-for="user.Id" class="form-control"/>
+                <input readonly asp-for="user.Id" class="form-control" />
             </div>
             <div class="form-group">
                 <label>User`s Nickame</label>
-                <input class="form-control" asp-for="user.Nickname"/>
+                <input readonly class="form-control" asp-for="user.Nickname" />
             </div>
+            @if (TempData["CurrentRole"] != null)
+            {
+                <div class="bg-info">
+                    <p>Current role:</p>
+                    <p>@TempData["CurrentRole"]</p>
+                </div>
+                <a class="btn btn-danger" href="~/Admin/DisappointCertainUser/@Model.currentRoleId/@Model.user.Id">Disapoint</a>
+            }
             <div class="form-group">
                 <label>Select the role</label>
-                 <select size="1" asp-for="chosenRoleId">
-                     <option value="@null"> </option>
-                     @foreach(var role in Model.roles)
-                     {
-                         <option value="@role.Id">@role.Name</option>
-                     }
-                 </select>               
+                <select size="1" asp-for="chosenRoleId">
+                    <option value="@null"> </option>
+                    @foreach (var role in Model.roles)
+                    {
+                        <option value="@role.Id">@role.Name</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-light">Complete</button>

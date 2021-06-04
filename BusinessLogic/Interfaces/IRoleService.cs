@@ -11,6 +11,7 @@ namespace BusinessLogic.Interfaces
         IEnumerable<IdentityRole> GetRoles();
         IdentityRole GetRole(string id);
         IdentityRole AddRole(string name);
+        IdentityRole GetUserRole(string id);
         void AppointSomeone(string roleId, string userId);
         void DisappointSomeone(string roleId, string userId);
         void Dispose();

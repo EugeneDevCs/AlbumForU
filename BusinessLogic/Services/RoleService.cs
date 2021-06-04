@@ -4,6 +4,8 @@ using ServerLayer.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using BusinessLogic.BusinessModels;
+using System.Linq;
 
 namespace BusinessLogic.Services
 {
@@ -42,6 +44,15 @@ namespace BusinessLogic.Services
         public IEnumerable<IdentityRole> GetRoles()
         {
             return dbAccess.Roles.GetAll();
+        }
+        public IdentityRole GetUserRole(string id)
+        {
+            List<IdentityUserRole<string>> AllRolesAndUsers = dbAccess.UserRoles.GetUserRoles();
+            string SerchedRoleId = (from userRole in AllRolesAndUsers
+                                    where userRole.UserId == id
+                                    select userRole.RoleId).FirstOrDefault();
+            IdentityRole SerchedRole = dbAccess.Roles.Get(SerchedRoleId);
+            return SerchedRole;
         }
 
         public void AppointSomeone(string roleId, string userId)

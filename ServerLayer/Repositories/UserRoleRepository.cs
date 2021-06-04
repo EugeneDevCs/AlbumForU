@@ -4,6 +4,7 @@ using ServerLayer.Interfaces;
 using ServerLayer.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ServerLayer.Repositories
@@ -16,7 +17,11 @@ namespace ServerLayer.Repositories
         {
             _appData = data;
         }
-
+        public List<IdentityUserRole<string>> GetUserRoles()
+        {
+            List<IdentityUserRole<string>> userRoles = _appData.UserRoles.ToList();
+            return userRoles;
+        }
         public void Appoint(string roleId, string userId)
         {
             _appData.UserRoles.Add(new IdentityUserRole<string> {

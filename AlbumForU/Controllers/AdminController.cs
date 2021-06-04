@@ -67,7 +67,14 @@ namespace AlbumForU.Controllers
             userRole.user = mapperUser.Map<AppUserBusiness, AppUser>(appUserBusiness);
 
             userRole.roles = _roleService.GetRoles().ToList();
+
+            if(_roleService.GetUserRole(id)!=null)
+            {
+                userRole.currentRoleId = _roleService.GetUserRole(id).Id;
+                TempData["CurrentRole"] = _roleService.GetUserRole(id).Name;
+            }
             
+
             return View(userRole);
         }
 
@@ -79,11 +86,33 @@ namespace AlbumForU.Controllers
             if(ModelState.IsValid)
             {
                 _roleService.AppointSomeone(userRole.chosenRoleId, userRole.user.Id);
-                TempData["Success"] = $"User {userRole.user.Nickname} was appointes to role with id {userRole.chosenRoleId}";
+                TempData["Success"] = $"User {userRole.user.Nickname} was appointed to role with id {userRole.chosenRoleId}";
                 return RedirectToAction("AdminIndex");
             }
             ModelState.AddModelError("", "Fill in all fields!");
             return View(userRole);
+        }
+
+        [Route("~/Admin/DisappointCertainUser/{roleId}/{userId}")]
+        [Authorize(Roles = "admin")]
+        public IActionResult DisappointCertainUser(string roleId,string userId)
+        {
+            if(ModelState.IsValid && userId!=null)
+            {
+                try
+                {
+                    _roleService.DisappointSomeone(roleId,userId);
+                    TempData["Success"] = $"User was successfully disappointed";
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                
+                return RedirectToAction("AdminIndex");
+            }
+            ModelState.AddModelError("", "Fill in all fields!");
+            return RedirectToAction("AdminIndex");
         }
 
         [Route("~/Admin/ManageTopics")]
