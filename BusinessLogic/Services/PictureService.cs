@@ -185,6 +185,10 @@ namespace BusinessLogic.Services
                 dbAccess.Pictures.Update(updatePicture);
                 dbAccess.Save();
             }
+            else
+            {
+                throw new Exception("Picture`s name th same!");
+            }
         }
         public void Dispose()
         {

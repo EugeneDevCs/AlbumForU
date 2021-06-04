@@ -71,6 +71,7 @@ namespace AlbumForU.Controllers
             if(_roleService.GetUserRole(id)!=null)
             {
                 userRole.currentRoleId = _roleService.GetUserRole(id).Id;
+                userRole.roles.RemoveAll(role => role.Id == userRole.currentRoleId);                
                 TempData["CurrentRole"] = _roleService.GetUserRole(id).Name;
             }
             
@@ -83,14 +84,25 @@ namespace AlbumForU.Controllers
         [HttpPost]
         public IActionResult AppointCertainUser(UserRoleRelation userRole)
         {
-            if(ModelState.IsValid)
+            if(ModelState.IsValid && userRole.chosenRoleId!=null)
             {
-                _roleService.AppointSomeone(userRole.chosenRoleId, userRole.user.Id);
-                TempData["Success"] = $"User {userRole.user.Nickname} was appointed to role with id {userRole.chosenRoleId}";
-                return RedirectToAction("AdminIndex");
+                try
+                {
+                    _roleService.AppointSomeone(userRole.chosenRoleId, userRole.user.Id);
+                    TempData["Success"] = $"User {userRole.user.Nickname} was appointed to role with id {userRole.chosenRoleId}";
+                    return RedirectToAction("AdminIndex");
+                }
+                catch (Exception ex)
+                {
+                    TempData["Failure"] = $"{ex.Message}";
+                }
+                
             }
-            ModelState.AddModelError("", "Fill in all fields!");
-            return View(userRole);
+            else
+            {
+                TempData["Failure"] = $"Fill in all fields!";
+            }
+            return Redirect("~/Admin/AppointCertainUser/"+userRole.user.Id);
         }
 
         [Route("~/Admin/DisappointCertainUser/{roleId}/{userId}")]

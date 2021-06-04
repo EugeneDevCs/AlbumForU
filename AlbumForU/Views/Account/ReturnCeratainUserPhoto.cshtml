@@ -4,6 +4,13 @@
 }
 @using AlbumForU.Models
 @model Picture
+
+@if (TempData["Failure"] != null)
+{
+    <div class="alert-danger">
+        <p><strong>Failure:</strong> @TempData["Failure"].ToString()</p>
+    </div>
+}
 <div class="card">
     <a class="btn btn-info" asp-area="Identity" asp-page="/Account/Manage/Index">BACK</a>
     <div class="card-header">Edit your picture</div>

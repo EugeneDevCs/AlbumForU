@@ -81,15 +81,33 @@ namespace AlbumForU.Controllers
         [HttpPost]
         public ActionResult ReturnCeratainUserPhoto(string Id,string Name)
         {
-            
+            if(Id!=null && Name!=null)
+            {
+                try
+                {
+                    PictureBusiness updatetedPic = _pictureService.GetCeratainPicture(Id);
+                    updatetedPic.Name = Name;
+                    _pictureService.Update(updatetedPic);
+
+                    TempData["Success"] = $"Picture was successfully edited!";
+                    return Redirect("~/Account/CertainPicture/" + Id);
+                }
+                catch (Exception ex)
+                {
+                    TempData["Failure"] = $"{ex.Message}";
+                }
+
+            }
+            else
+            {
+                TempData["Failure"] = $"Fill in fields!";
+            }
+
             PictureBusiness pictureBusiness = _pictureService.GetCeratainPicture(Id);
-            pictureBusiness.Name = Name;
-            _pictureService.Update(pictureBusiness);
+            var mapperPictures = new MapperConfiguration(cfg => cfg.CreateMap<PictureBusiness, Picture>()).CreateMapper();
+            Picture picture = mapperPictures.Map<PictureBusiness, Picture>(pictureBusiness);
 
-            TempData["Success"] = $"Picture was successfully edited!";
-
-
-            return Redirect("~/Account/CertainPicture/" + Id);
+            return View(picture);
         }
         
         [Route("~/Account/CertainPicture/Delete/{Id}")]
