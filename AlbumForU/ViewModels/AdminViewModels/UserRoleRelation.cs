@@ -11,6 +11,8 @@ namespace AlbumForU.ViewModels.AdminViewModels
     {
         public AppUser user { get; set; }
         public List<IdentityRole>roles { get; set; }
+
+        public string currentRoleId { get; set; }
         public string chosenRoleId { get; set; }
     }
 }
