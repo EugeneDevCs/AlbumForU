@@ -146,7 +146,7 @@ namespace AlbumForU.Controllers
             {
                 try
                 {
-                    _topicService.Create(topicName);
+                    _topicService.Create(topicName.Substring(0, 1).ToUpper() + (topicName.Length > 1 ? topicName.Substring(1) : ""));
                     TempData["Success"] = $"Topic {topicName} was successfully added!";
                 }
                 catch(TopicAlreadyExistException ex)
