@@ -2,19 +2,22 @@
     Layout = "~/Views/Admin/_Admin_Layout.cshtml";
 }
 @using AlbumForU.Models
-@model string
+@model Picture
 <div class="card">
-    <div class="alert-danger">
-        @Html.ValidationSummary()
-    </div>
+    @if (TempData["Failure"] != null)
+    {
+        <div class="alert-danger">
+            <p><strong>Fail:</strong> @TempData["Failure"].ToString()</p>
+        </div>
+    }
     <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Back</a>
     <div class="card-header">
-        <h3>Delete your profile</h3>
+        <h3>Delete this picture?</h3>
     </div>
     <div class="card-body">
-        <h3>Are you sure? You won`t have an opportunity to access your photos and they will be deleted!</h3>
+        <h3>Are you sure?</h3>
         <br />
         <br />
-        <a href="~/Admin/DeletePictures/Agree/@Model" class="btn btn-danger">DELETE</a>
+        <a href="~/Admin/DeletePictures/Agree/@Model.Id" class="btn btn-danger">DELETE</a>
     </div>
 </div>

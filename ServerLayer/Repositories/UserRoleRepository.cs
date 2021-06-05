@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ServerLayer.DataObtaining;
 using ServerLayer.Interfaces;
 using ServerLayer.Models;
@@ -32,11 +33,10 @@ namespace ServerLayer.Repositories
 
         public void Disappoint(string roleId, string userId)
         {
-            _appData.UserRoles.Remove(new IdentityUserRole<string>
-            {
-                RoleId = roleId,
-                UserId = userId
-            });
+            IdentityUserRole<string> DelRole = (from ur in _appData.UserRoles
+                                                where ur.RoleId == roleId && ur.UserId == userId
+                                                select ur).FirstOrDefault();
+            _appData.UserRoles.Remove(DelRole);
         }
     }
 }

@@ -151,12 +151,12 @@ namespace AlbumForU.Controllers
                 }
                 catch(TopicAlreadyExistException ex)
                 {
-                    ModelState.AddModelError("", ex.Message);             
+                    TempData["Failure"]= ex.Message;             
                 }
             }
             else
             {
-                ModelState.AddModelError("", "Fill in all fields!");
+                TempData["Failure"]= "Fill in all fields!";
             }
             var mapperTopic = new MapperConfiguration(cfg => cfg.CreateMap<TopicBusiness, Topic>()).CreateMapper();
             List<TopicBusiness> topicBusinesses = _topicService.GetTopics().ToList();            
@@ -172,6 +172,7 @@ namespace AlbumForU.Controllers
             if(id!=null)
             {
                 _topicService.Delete(id, _appEnvironment.WebRootPath);
+                TempData["Success"] = $"topic was successfully edited!";
             }
             else
             {
@@ -203,19 +204,20 @@ namespace AlbumForU.Controllers
                     TopicBusiness topicBusiness = _topicService.GetCeratainTopic(topic.Id);
                     topicBusiness.Name = topic.Name;
                     _topicService.Update(topicBusiness);
+                    TempData["Success"] = $"Topic was successfully edited!";
+                    return Redirect("~/Admin/ManageTopics");
                 }
                 catch (TopicAlreadyExistException ex)
                 {
-                    ModelState.AddModelError("", ex.Message);
+                    TempData["Failure"]= ex.Message;
                 }
             }
             else
             {
-
-                ModelState.AddModelError("", "Fill in only correct values!");
-                return View(topic);
+                TempData["Failure"]="Fill in only correct values!";   
             }
-            return Redirect("~/Admin/ManageTopics");
+            return View(topic);
+
         }
 
         [Route("~/Admin/DeletePictures/{id}")]
@@ -233,9 +235,17 @@ namespace AlbumForU.Controllers
         [HttpGet]
         public IActionResult Delete(string id)
         {
-            _pictureService.Delete(id, _appEnvironment.WebRootPath);
-            TempData["Success"] = $"Picture was successfully deleted!";
-            return Redirect("~/");
+            try
+            {
+                _pictureService.Delete(id, _appEnvironment.WebRootPath);
+                TempData["Success"] = $"Picture was successfully deleted!";
+                return Redirect("~/Admin/AdminIndex");
+            }
+            catch (Exception ex)
+            {
+                TempData["Failure"] = ex.Message; 
+            }
+            return Redirect("~/Admin/DeletePictures/" + id);
         }
         
         [Route("~/Admin/DeleteComment")]

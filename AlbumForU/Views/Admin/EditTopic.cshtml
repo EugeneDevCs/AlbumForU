@@ -4,21 +4,24 @@
 @using AlbumForU.Models
 @model Topic
     <a href="~/Admin/ManageTopics" class="btn btn-primary">Back</a>
-<div class="card">
-    <div class="alert-danger">
-        @Html.ValidationSummary()
-    </div>
-    <div class="card-header"><h3>Topic Edition</h3></div>
-    <div class="card-body">
-        <form method="post">
-            <input hidden name="Id" value="@Model.Id" />
-            <div class="form-group">
-                <label for="Name">You can edit the name of this topic</label>
-                <input class="form-control" name="Name" value="@Model.Name" required type="text" />
+    <div class="card">
+        @if (TempData["Failure"] != null)
+        {
+            <div class="alert-danger">
+                <p><strong>Fail:</strong> @TempData["Failure"].ToString()</p>
             </div>
-            <div class="form-group">
-                <button class="form-control" type="submit">Save</button>
-            </div>
-        </form>
+        }
+        <div class="card-header"><h3>Topic Edition</h3></div>
+        <div class="card-body">
+            <form method="post">
+                <input hidden name="Id" value="@Model.Id" />
+                <div class="form-group">
+                    <label for="Name">You can edit the name of this topic</label>
+                    <input class="form-control" name="Name" value="@Model.Name" required type="text" />
+                </div>
+                <div class="form-group">
+                    <button class="form-control" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>

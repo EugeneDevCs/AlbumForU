@@ -117,7 +117,7 @@ namespace AlbumForU.Controllers
             _pictureService.Delete(Id, _appEnvironment.WebRootPath);
             TempData["Success"] = $"Picture was successfully deleted!";
 
-            return Redirect("~/Account/Index");
+            return Redirect("~/Account/ManagePictures/"+ this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
 
         [Route("~/Account/ManageComments/{userId}")]

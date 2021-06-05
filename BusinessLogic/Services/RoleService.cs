@@ -59,8 +59,20 @@ namespace BusinessLogic.Services
         {
             if(roleId !=null && userId !=null)
             {
-                dbAccess.UserRoles.Appoint(roleId, userId);
-                dbAccess.Save();
+                IdentityRole currRole = GetUserRole(userId);
+                if(currRole == null)
+                {
+                    dbAccess.UserRoles.Appoint(roleId, userId);
+                    dbAccess.Save();
+                }
+                else
+                {
+                    
+                    dbAccess.UserRoles.Appoint(roleId, userId);
+                    DisappointSomeone(currRole.Id, userId);
+                    dbAccess.Save();
+                }
+                
             }
             else
             {

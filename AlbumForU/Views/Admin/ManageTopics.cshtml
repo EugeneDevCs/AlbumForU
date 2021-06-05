@@ -10,6 +10,12 @@
         <p><strong>Success:</strong> @TempData["Success"].ToString()</p>
     </div>
 }
+@if (TempData["Failure"] != null)
+{
+    <div class="alert-danger">
+        <p><strong>Fail:</strong> @TempData["Failure"].ToString()</p>
+    </div>
+}
 <div class="alert-danger">
     @Html.ValidationSummary()
 </div>
@@ -26,7 +32,7 @@
     <br />
     <br />
     <div class="card half-width">
-        @foreach(var topic in Model)
+        @foreach (var topic in Model)
         {
             <div class="list-group">
                 <h5>@topic.Name</h5>

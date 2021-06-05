@@ -14,8 +14,8 @@
     }
     <h1>Hello there!</h1>
     <div class="search_contayner">
-        <form asp-action="" class="search_form" method="post">
-            <input name="request_text" class="form-control" placeholder="Search" />
+        <form asp-action="Search" class="search_form" method="post">
+            <input name="request_text" class="form-control" placeholder="Search" required minlength="2" maxlength="50" />
             <button class="form-control" type="submit">Go</button>
         </form>
     </div>

@@ -42,7 +42,6 @@ namespace AlbumForU
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IAppUserService, AppUserService>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
-            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IRoleService, RoleService>();
 
             services.AddMvc();

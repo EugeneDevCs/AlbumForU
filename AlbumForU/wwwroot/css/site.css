@@ -17,7 +17,21 @@ html {
     font-size: 16px;
   }
 }
-
+button{
+    transition:0.5s;
+}
+a{
+    transition:0.5s;
+    border-radius:5px;
+}
+button:hover {
+    transform: translate(0, -4px);
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+a:hover {
+    transform: translate(0, -4px);
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
 .container {
   max-width: 960px;
 }
@@ -66,11 +80,20 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
   /*CUSTOM STYLES*/
-.pictures_grid{
+.search_contayner{
     width:100%;
-    overflow:hidden;
+    margin-bottom:20px;
     display:flex;
-    justify-content:space-between;
+}
+.search_contayner input{
+    width:100%;
+    float:left;
+}
+.pictures_grid {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
 }
 .grid_column{
     width:29%;
@@ -82,7 +105,12 @@ body {
     width: 100%;
     margin: 10px 0;
     float: left;
+    transition:0.5s;
 }
+    .thumb_link_contayner:hover {
+        transform: translate(0, -4px);
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
 .thumb_wrapper{
     width:100%;
 }

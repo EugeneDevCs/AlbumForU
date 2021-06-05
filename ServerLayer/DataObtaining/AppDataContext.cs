@@ -15,12 +15,6 @@ namespace ServerLayer.DataObtaining
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Like> Likes { get; set; }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Like>()
-                .HasKey(o => new { o.UserId, o.PictureId });
-        }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Thumbnail>Thumbs { get; set; }
     }

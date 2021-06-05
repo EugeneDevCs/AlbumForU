@@ -27,6 +27,7 @@ namespace ServerLayer.Repositories
         public void Delete(string id)
         {
             IdentityRole role = _appData.Roles.Find(id);
+            
             if (role != null)
             {
                 _appData.Roles.Remove(role);
@@ -45,7 +46,7 @@ namespace ServerLayer.Repositories
 
         public IEnumerable<IdentityRole> GetAll()
         {
-            return _appData.Roles;
+            return _appData.Roles.AsNoTracking();
         }
 
         public void Update(IdentityRole item)
