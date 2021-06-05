@@ -135,7 +135,7 @@ namespace AlbumForU.Controllers
                         TempData["originalId"].ToString()
                     );
 
-                    TempData["Success"] = $"Picture was successfully uploaded!";
+                    TempData["Success"] = $"Comment was successfully uploaded!";
                 }
                 catch(ArgumentNullException ex)
                 {

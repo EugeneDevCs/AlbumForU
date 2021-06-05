@@ -35,7 +35,7 @@ namespace AlbumForU
 
             services.AddDbContext<AppDataContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("ServerLayer")));
 
-            services.AddScoped<IDbAccess, DbAccessRepository>();
+            services.AddTransient<IDbAccess, DbAccessRepository>();
             services.AddScoped<IPictureService, PictureService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ILikeService, LikeService>();

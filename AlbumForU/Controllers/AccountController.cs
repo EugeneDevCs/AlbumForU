@@ -135,7 +135,7 @@ namespace AlbumForU.Controllers
             if(commentId!=null)
             {
                 _commentService.DeleteComment(commentId);
-                TempData["Success"] = $"Picture was successfully uploaded!";
+                TempData["Success"] = $"Comment was successfully deleted!";
             }
             else
             {

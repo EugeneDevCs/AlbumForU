@@ -72,17 +72,16 @@ namespace BusinessLogic.Services
         public void AddPicture(string PictureName, string TopicId, IFormFile Picture, string webrootPath, string currentUserID)
         {
             var mappedData = new MapperConfiguration(config => config.CreateMap<Topic, TopicBusiness>()).CreateMapper();
-            string topicName = mappedData.Map<Topic, TopicBusiness>((dbAccess.Topics.Get(TopicId))).Name;
              
             //Check if the directory exists
-            string directoryPath = "pictures/originals/" + topicName;
+            string directoryPath = "pictures/originals/" + TopicId;
             if (!Directory.Exists(webrootPath + "/" + directoryPath))
             {
                 Directory.CreateDirectory(webrootPath + "/" + directoryPath);
             }
 
             //Check if the directory for thumb exists
-            string directoryPathThumb = "pictures/thumbs/" + topicName;
+            string directoryPathThumb = "pictures/thumbs/" + TopicId;
             if (!Directory.Exists(webrootPath + "/" + directoryPathThumb))
             {
                 Directory.CreateDirectory(webrootPath + "/" + directoryPathThumb);

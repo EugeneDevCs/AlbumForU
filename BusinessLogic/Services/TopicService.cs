@@ -39,9 +39,9 @@ namespace BusinessLogic.Services
             
             IEnumerable<Picture> delPicture = dbAccess.Pictures.Find(th => th.TopicId == id);
             IEnumerable<Thumbnail> delThumbs = dbAccess.Thumbnails.Find(th => th.TopicId == id);
-            string topicName = dbAccess.Topics.Get(id).Name;
-            string directoryPath = "pictures/originals/" + topicName;
-            string directoryPathThumb = "pictures/thumbs/" + topicName;
+            //string topicName = dbAccess.Topics.Get(id).Name;
+            string directoryPath = "pictures/originals/" + id;
+            string directoryPathThumb = "pictures/thumbs/" + id;
             if (Directory.Exists(webrootPath + "/" + directoryPath))
             {
                 Directory.Delete(webrootPath + "/" + directoryPath,true);
